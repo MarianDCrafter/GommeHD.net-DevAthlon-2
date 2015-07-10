@@ -11,13 +11,13 @@ public class QuitListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        Main.getPlayerManager().onQuit(event.getPlayer());
+        Main.getGameManager().onQuit(event.getPlayer());
     }
 
     @SuppressWarnings("unused")
     @EventHandler
     public void onQuit(PlayerKickEvent event) {
-        Main.getPlayerManager().onQuit(event.getPlayer());
+        Main.getGameManager().onQuit(event.getPlayer());
     }
 
 }

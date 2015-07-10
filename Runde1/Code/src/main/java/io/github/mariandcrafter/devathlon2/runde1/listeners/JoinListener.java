@@ -10,6 +10,6 @@ public class JoinListener implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Main.getPlayerManager().onJoin(event.getPlayer());
+        Main.getGameManager().onJoin(event.getPlayer());
     }
 }

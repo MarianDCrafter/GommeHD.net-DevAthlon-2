@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde1;
 
 import io.github.mariandcrafter.devathlon2.runde1.commands.StartGameCommands;
+import io.github.mariandcrafter.devathlon2.runde1.game.GameManager;
 import io.github.mariandcrafter.devathlon2.runde1.listeners.JoinListener;
 import io.github.mariandcrafter.devathlon2.runde1.listeners.QuitListener;
 import org.bukkit.Bukkit;
@@ -15,7 +16,7 @@ public class Main extends JavaPlugin {
 
     private static Main instance;
     private static Configuration configuration;
-    private static PlayerManager playerManager;
+    private static GameManager gameManager;
 
     private List<Listener> listeners;
 
@@ -43,10 +44,10 @@ public class Main extends JavaPlugin {
     }
 
     public void loadPlayerManager() {
-        playerManager = new PlayerManager();
+        gameManager = new GameManager();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            playerManager.onJoin(player);
+            gameManager.onJoin(player);
         }
     }
 
@@ -70,8 +71,8 @@ public class Main extends JavaPlugin {
         return configuration;
     }
 
-    public static PlayerManager getPlayerManager() {
-        return playerManager;
+    public static GameManager getGameManager() {
+        return gameManager;
     }
 
 }

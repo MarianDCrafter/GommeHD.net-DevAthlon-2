@@ -5,3 +5,163 @@ lobbySpawn:
   z: 284.5
   yaw: 0.0
   pitch: 0.0
+
+maps:
+  map1:
+    name: Standard
+    creator: Its_Enzo
+    world: world
+    spawn:
+      x: 48.0
+      y: 87.0
+      z: -59.0
+      yaw: 0.0
+      pitch: 0.0
+    runnerSpawn:
+      x: 48.0
+      y: 87.0
+      z: -68.0
+      yaw: 0.0
+      pitch: 0.0
+    catcherSpawn:
+      x: 33.5
+      y: 87.0
+      z: -85.5
+      yaw: 0.0
+      pitch: 0.0
+    validArrowArea:
+      start:
+        x: 22
+        y: 86
+        z: -72
+      end:
+        x: 44
+        y: 86
+        z: -111
+    bases:
+      base1:
+        number: 1
+        gateMaterial: FENCE
+        area:
+          start:
+            x: 45
+            y: 89
+            z: -71
+          end:
+            x: 50
+            y: 86
+            z: -66
+        entranceArea:
+          start:
+            x: 45
+            y: 87
+            z: -67
+          end:
+            x: 45
+            y: 87
+            z: -70
+        exitArea:
+          start:
+            x: 46
+            y: 87
+            z: -71
+          end:
+            x: 49
+            y: 87
+            z: -71
+      base2:
+        number: 2
+        area:
+          start:
+            x: 45
+            y: 89
+            z: -112
+          end:
+            x: 50
+            y: 86
+            z: -117
+        entranceArea:
+          start:
+            x: 49
+            y: 87
+            z: -112
+          end:
+            x: 46
+            y: 87
+            z: -112
+        exitArea:
+          start:
+            x: 45
+            y: 87
+            z: -113
+          end:
+            x: 45
+            y: 87
+            z: -116
+      base3:
+        number: 3
+        area:
+          start:
+            x: 21
+            y: 89
+            z: -112
+          end:
+            x: 16
+            y: 86
+            z: -117
+        entranceArea:
+          start:
+            x: 21
+            y: 87
+            z: -116
+          end:
+            x: 21
+            y: 87
+            z: -113
+        exitArea:
+          start:
+            x: 20
+            y: 87
+            z: -112
+          end:
+            x: 17
+            y: 87
+            z: -112
+      base4:
+        number: 4
+        area:
+          start:
+            x: 21
+            y: 89
+            z: -71
+          end:
+            x: 16
+            y: 86
+            z: -66
+        entranceArea:
+          start:
+            x: 17
+            y: 87
+            z: -71
+          end:
+            x: 20
+            y: 87
+            z: -71
+        endArea:
+          start:
+            x: 21
+            y: 87
+            z: -70
+          end:
+            x: 21
+            y: 87
+            z: -67
+    hoppers:
+      hopper1:
+        x: 33
+        y: 87
+        z: -92
+      hopper2:
+        x: 33
+        y: 87
+        z: -91
