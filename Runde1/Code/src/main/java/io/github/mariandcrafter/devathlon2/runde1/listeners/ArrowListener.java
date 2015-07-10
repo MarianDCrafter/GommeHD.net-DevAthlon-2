@@ -28,7 +28,6 @@ public class ArrowListener implements Listener {
         }
 
         Main.getGameManager().blockHitByArrow(arrow, block, player);
-
     }
 
 }

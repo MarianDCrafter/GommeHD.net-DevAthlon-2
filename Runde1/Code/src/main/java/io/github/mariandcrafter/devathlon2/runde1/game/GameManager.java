@@ -85,4 +85,22 @@ public class GameManager {
         }
     }
 
+    public boolean playerHitByArrow(Arrow arrow, Player player) {
+        for (Match match : matches) {
+            if (match.getCatcherPlayer() == player) {
+                return match.catcherHitByArrow(arrow);
+            }
+        }
+        return false;
+    }
+
+    public void blockClicked(Block block, Player player) {
+        for (Match match : matches) {
+            if (match.getCatcherPlayer() == player) {
+                match.catcherClickedBlock(block);
+                break;
+            }
+        }
+    }
+
 }

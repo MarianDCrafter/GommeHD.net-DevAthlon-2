@@ -33,7 +33,7 @@ public class Match {
     private int currentBase = 0;
 
     private Material hitBlockBeforeMaterial;
-    private byte hitBlockBeforeData;
+    private byte hitBlockBeforeData = 0;
     private Block hitBlock;
 
     public Match(GameMap gameMap, UUID runner, UUID catcher) {
@@ -118,7 +118,7 @@ public class Match {
                     if (time % 2 == 0) {
                         randomHitBlock();
                     }
-                    if (time % 120 == 0 || (time <= 600 && time % 200 == 0) || time <= 60) {
+                    if (time % 2400 == 0 || (time <= 600 && time % 200 == 0) || (time <= 60 && time % 20 == 0)) {
                         sendTimeToEnd();
                     }
                 }
@@ -144,7 +144,7 @@ public class Match {
     }
 
     public void runnerHitBlock(Arrow arrow, Block block) {
-        if (currentPhase != Phase.SHOOTING) return;
+        if (currentPhase != Phase.SHOOTING || arrow.getShooter() != getRunnerPlayer()) return;
         arrow.remove();
 
         if (gameMap.getValidArrowArea().containsBlockLocation(block.getLocation())) {
@@ -157,6 +157,38 @@ public class Match {
         } else {
             getRunnerPlayer().getInventory().addItem(new ItemStack(Material.ARROW));
         }
+    }
+
+    public boolean catcherHitByArrow(Arrow arrow) {
+        if (currentPhase != Phase.SHOOTING) return false;
+        arrow.remove();
+
+        if (arrow.getShooter() == getRunnerPlayer()) {
+            catcherGotBall();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void rollbackHitBlock() {
+        hitBlock.setType(hitBlockBeforeMaterial);
+        //noinspection deprecation
+        hitBlock.setData(hitBlockBeforeData);
+
+        hitBlockBeforeMaterial = null;
+        hitBlockBeforeData = 0;
+        hitBlock = null;
+    }
+
+    public void catcherClickedBlock(Block block) {
+        if (!block.getLocation().equals(block.getLocation())) return;
+        rollbackHitBlock();
+        catcherGotBall();
+    }
+
+    public void catcherGotBall() {
+        getCatcherPlayer().getInventory().addItem(new ItemStack(Material.NETHER_STAR));
     }
 
     private void startRunToNextBase() {

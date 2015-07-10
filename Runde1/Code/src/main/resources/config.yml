@@ -25,22 +25,21 @@ maps:
       pitch: 0.0
     catcherSpawn:
       x: 33.5
-      y: 87.0
-      z: -85.5
+      y: 90.0
+      z: -93.5
       yaw: 0.0
       pitch: 0.0
     validArrowArea:
       start:
-        x: 22
+        x: 23
         y: 86
-        z: -72
+        z: -110
       end:
-        x: 44
-        y: 86
-        z: -111
+        x: 43
+        y: 91
+        z: -73
     bases:
       base1:
-        number: 1
         gateMaterial: FENCE
         area:
           start:
@@ -53,24 +52,23 @@ maps:
             z: -66
         entranceArea:
           start:
-            x: 45
+            x: 44
             y: 87
-            z: -67
+            z: -66
           end:
-            x: 45
+            x: 44
             y: 87
-            z: -70
+            z: -71
         exitArea:
           start:
-            x: 46
+            x: 45
             y: 87
-            z: -71
+            z: -72
           end:
-            x: 49
+            x: 50
             y: 87
-            z: -71
+            z: -72
       base2:
-        number: 2
         area:
           start:
             x: 45
@@ -82,24 +80,23 @@ maps:
             z: -117
         entranceArea:
           start:
-            x: 49
+            x: 50
             y: 87
-            z: -112
+            z: -111
           end:
-            x: 46
+            x: 45
             y: 87
-            z: -112
+            z: -111
         exitArea:
           start:
-            x: 45
+            x: 44
             y: 87
-            z: -113
+            z: -112
           end:
-            x: 45
+            x: 44
             y: 87
-            z: -116
+            z: -117
       base3:
-        number: 3
         area:
           start:
             x: 21
@@ -111,24 +108,23 @@ maps:
             z: -117
         entranceArea:
           start:
-            x: 21
+            x: 22
             y: 87
-            z: -116
+            z: -117
           end:
-            x: 21
+            x: 22
             y: 87
-            z: -113
+            z: -112
         exitArea:
           start:
-            x: 20
+            x: 21
             y: 87
-            z: -112
+            z: -111
           end:
-            x: 17
+            x: 16
             y: 87
-            z: -112
+            z: -111
       base4:
-        number: 4
         area:
           start:
             x: 21
@@ -140,28 +136,28 @@ maps:
             z: -66
         entranceArea:
           start:
-            x: 17
+            x: 16
             y: 87
-            z: -71
+            z: -72
           end:
-            x: 20
+            x: 21
             y: 87
-            z: -71
+            z: -72
         endArea:
           start:
-            x: 21
+            x: 22
             y: 87
-            z: -70
+            z: -71
           end:
-            x: 21
+            x: 22
             y: 87
-            z: -67
+            z: -66
     hoppers:
       hopper1:
         x: 33
-        y: 87
+        y: 88
         z: -92
       hopper2:
         x: 33
-        y: 87
+        y: 88
         z: -91
