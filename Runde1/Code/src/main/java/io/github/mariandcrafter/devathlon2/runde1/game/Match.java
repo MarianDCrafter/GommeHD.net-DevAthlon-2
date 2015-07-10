@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class Match {
 
-    private enum Phase {
+    public enum Phase {
         START, SHOOTING, RUNNING, END
     }
 
@@ -40,10 +40,16 @@ public class Match {
         this.gameMap = gameMap;
         this.runner = runner;
         this.catcher = catcher;
+
+        gameMap.closeAllGates();
     }
 
     public GameMap getGameMap() {
         return gameMap;
+    }
+
+    public Phase getCurrentPhase() {
+        return currentPhase;
     }
 
     public UUID getRunner() {
@@ -102,7 +108,7 @@ public class Match {
         getRunnerPlayer().teleport(gameMap.getRunnerSpawn());
         getCatcherPlayer().teleport(gameMap.getCatcherSpawn());
 
-        startInBase(gameMap.getBases().get(currentBase));
+        startInBase(0);
 
         time = TIME_PER_ROUND;
         sendTimeToEnd();
@@ -134,8 +140,12 @@ public class Match {
         }
     }
 
-    private void startInBase(Base base) {
+    public void startInBase(int newBase) {
         currentPhase = Phase.SHOOTING;
+
+        gameMap.getBases().get(currentBase).closeExit();
+        currentBase = newBase;
+        gameMap.getBases().get(currentBase).closeEntrance();
 
         Player runner = getRunnerPlayer();
 
@@ -151,8 +161,8 @@ public class Match {
             hitBlockBeforeMaterial = block.getType();
             //noinspection deprecation
             hitBlockBeforeData = block.getData();
-
             hitBlock = block;
+
             startRunToNextBase();
         } else {
             getRunnerPlayer().getInventory().addItem(new ItemStack(Material.ARROW));
@@ -164,6 +174,7 @@ public class Match {
         arrow.remove();
 
         if (arrow.getShooter() == getRunnerPlayer()) {
+            startRunToNextBase();
             catcherGotBall();
             return true;
         } else {
@@ -192,11 +203,23 @@ public class Match {
     }
 
     private void startRunToNextBase() {
+        currentPhase = Phase.RUNNING;
+        gameMap.getBases().get(currentBase).openExit();
+        gameMap.getBases().get(nextBaseIndex()).openEntrance();
 
+        getRunnerPlayer().getInventory().clear();
     }
 
     private void end() {
 
+    }
+
+    public int nextBaseIndex() {
+        if (currentBase == gameMap.getBases().size() - 1) {
+            return 0;
+        } else {
+            return currentBase + 1;
+        }
     }
 
 }

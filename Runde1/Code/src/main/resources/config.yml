@@ -69,6 +69,7 @@ maps:
             y: 87
             z: -72
       base2:
+        gateMaterial: FENCE
         area:
           start:
             x: 45
@@ -97,6 +98,7 @@ maps:
             y: 87
             z: -117
       base3:
+        gateMaterial: FENCE
         area:
           start:
             x: 21
@@ -125,6 +127,7 @@ maps:
             y: 87
             z: -111
       base4:
+        gateMaterial: FENCE
         area:
           start:
             x: 21
@@ -143,7 +146,7 @@ maps:
             x: 21
             y: 87
             z: -72
-        endArea:
+        exitArea:
           start:
             x: 22
             y: 87

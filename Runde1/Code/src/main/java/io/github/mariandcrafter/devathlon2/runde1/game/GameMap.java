@@ -57,4 +57,11 @@ public class GameMap {
         return hoppers;
     }
 
+    public void closeAllGates() {
+        for (Base base : bases) {
+            base.closeEntrance();
+            base.closeExit();
+        }
+    }
+
 }

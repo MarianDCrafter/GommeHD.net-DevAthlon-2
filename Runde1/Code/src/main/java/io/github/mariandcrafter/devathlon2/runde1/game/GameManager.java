@@ -49,13 +49,17 @@ public class GameManager {
     }
 
     public boolean isPlaying(Player player) {
+        return getMatch(player) != null;
+    }
+
+    public Match getMatch(Player player) {
         UUID uuid = player.getUniqueId();
         for (Match match : matches) {
             if (match.getRunner() == uuid || match.getCatcher() == uuid) {
-                return true;
+                return match;
             }
         }
-        return false;
+        return null;
     }
 
     public void startMatch(Player player1, Player player2) {

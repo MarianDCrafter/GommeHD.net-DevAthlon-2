@@ -9,10 +9,31 @@ public class Base {
     private Area entrance, exit;
 
     public Base(Material gateMaterial, Area area, Area entrance, Area exit) {
+        System.out.println(gateMaterial);
         this.gateMaterial = gateMaterial;
         this.area = area;
         this.entrance = entrance;
         this.exit = exit;
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void openEntrance() {
+        entrance.fill(Material.AIR);
+    }
+
+    public void closeEntrance() {
+        entrance.fill(gateMaterial);
+    }
+
+    public void openExit() {
+        exit.fill(Material.AIR);
+    }
+
+    public void closeExit() {
+        exit.fill(gateMaterial);
     }
 
 }
