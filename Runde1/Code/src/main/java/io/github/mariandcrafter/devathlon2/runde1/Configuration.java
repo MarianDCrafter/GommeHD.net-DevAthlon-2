@@ -43,7 +43,6 @@ public class Configuration {
                 configuration.getString(path + ".name"),
                 configuration.getString(path + ".creator"),
                 loadLocationWithYawAndPitch(world, path + ".spawn"),
-                loadLocationWithYawAndPitch(world, path + ".runnerSpawn"),
                 loadLocationWithYawAndPitch(world, path + ".catcherSpawn"),
                 loadArea(world, path + ".validArrowArea"),
                 loadBases(world, path + ".bases"),
@@ -62,6 +61,7 @@ public class Configuration {
     private Base loadBase(World world, String path) {
         return new Base(
                 Material.getMaterial(configuration.getString(path + ".gateMaterial")),
+                loadLocationWithYawAndPitch(world, path + ".spawn"),
                 loadArea(world, path + ".area"),
                 loadArea(world, path + ".entranceArea"),
                 loadArea(world, path + ".exitArea")

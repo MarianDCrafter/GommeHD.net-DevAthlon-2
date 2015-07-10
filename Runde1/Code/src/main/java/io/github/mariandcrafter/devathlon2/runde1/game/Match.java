@@ -105,7 +105,7 @@ public class Match {
     public void gameStart() {
         sendMessage(Message.message(ChatColor.GREEN + "Die Runde beginnt!"));
 
-        getRunnerPlayer().teleport(gameMap.getRunnerSpawn());
+        getRunnerPlayer().teleport(gameMap.getBases().get(0).getSpawn());
         getCatcherPlayer().teleport(gameMap.getCatcherSpawn());
 
         startInBase(0);
@@ -148,9 +148,10 @@ public class Match {
         gameMap.getBases().get(currentBase).closeEntrance();
 
         Player runner = getRunnerPlayer();
-
         runner.getInventory().addItem(new ItemStack(Material.BOW));
         runner.getInventory().addItem(new ItemStack(Material.ARROW));
+
+        getCatcherPlayer().getInventory().clear();
     }
 
     public void runnerHitBlock(Arrow arrow, Block block) {
@@ -208,6 +209,11 @@ public class Match {
         gameMap.getBases().get(nextBaseIndex()).openEntrance();
 
         getRunnerPlayer().getInventory().clear();
+    }
+
+    public void ballInsertedIntoHopper() {
+        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
+        startInBase(currentBase);
     }
 
     private void end() {
