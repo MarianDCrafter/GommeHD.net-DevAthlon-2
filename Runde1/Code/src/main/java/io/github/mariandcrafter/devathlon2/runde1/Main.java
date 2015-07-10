@@ -2,6 +2,7 @@ package io.github.mariandcrafter.devathlon2.runde1;
 
 import io.github.mariandcrafter.devathlon2.runde1.commands.StartGameCommands;
 import io.github.mariandcrafter.devathlon2.runde1.game.GameManager;
+import io.github.mariandcrafter.devathlon2.runde1.listeners.ArrowListener;
 import io.github.mariandcrafter.devathlon2.runde1.listeners.JoinListener;
 import io.github.mariandcrafter.devathlon2.runde1.listeners.QuitListener;
 import org.bukkit.Bukkit;
@@ -54,6 +55,7 @@ public class Main extends JavaPlugin {
     public void loadListeners() {
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ArrowListener(), this);
     }
 
     public void loadCommands() {

@@ -50,6 +50,10 @@ public class StartGameCommands implements CommandExecutor {
      * @param args   the arguments of the command
      */
     private void invite(Player player, String[] args) {
+        if (Main.getGameManager().isPlaying(player)) {
+            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            return;
+        }
         if (args.length == 0) {
             player.sendMessage(Message.message(ChatColor.RED + "Verwendung des Befehls: /invite [Spieler]"));
             return;
@@ -66,6 +70,10 @@ public class StartGameCommands implements CommandExecutor {
         }
         if (Main.getGameManager().getInvitations().get(player.getUniqueId()) == invitedPlayer.getUniqueId()) {
             player.sendMessage(Message.message(ChatColor.RED + "Du hast den Spieler " + invitedPlayer.getName() + " bereits eingeladen."));
+            return;
+        }
+        if (Main.getGameManager().isPlaying(invitedPlayer)) {
+            player.sendMessage(Message.message(ChatColor.RED + "Der Spieler " + invitedPlayer.getName() + " ist gerade in einem Spiel."));
             return;
         }
 
@@ -87,6 +95,10 @@ public class StartGameCommands implements CommandExecutor {
      * @param args   the arguments of the command
      */
     private void accept(Player player, String[] args) {
+        if (Main.getGameManager().isPlaying(player)) {
+            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            return;
+        }
 
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
@@ -95,7 +107,7 @@ public class StartGameCommands implements CommandExecutor {
         inviter.sendMessage(Message.message(ChatColor.GOLD + player.getName() + " hat deine Einladung angenommen."));
 
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
-
+        Main.getGameManager().startMatch(player, inviter);
     }
 
     /**
@@ -104,6 +116,10 @@ public class StartGameCommands implements CommandExecutor {
      * @param args   the arguments of the command
      */
     private void deny(Player player, String[] args) {
+        if (Main.getGameManager().isPlaying(player)) {
+            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            return;
+        }
 
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
