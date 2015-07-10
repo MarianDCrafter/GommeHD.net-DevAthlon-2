@@ -2,7 +2,6 @@ package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
 import org.bukkit.GameMode;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 
@@ -30,6 +29,7 @@ public class GameManager {
     public void onJoin(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Main.getConfiguration().getSpawn());
+        // TODO sicherheitshalber inventory clearen, level zurücksetzen, kein feuer, keine Effekte, heilen, etc.
     }
 
     /**
@@ -72,21 +72,19 @@ public class GameManager {
         match.start();
     }
 
+    public void stopMatch(Match match) {
+        matches.remove(match);
+
+        match.getCatcherPlayer().teleport(Main.getConfiguration().getSpawn());
+        match.getRunnerPlayer().teleport(Main.getConfiguration().getSpawn());
+    }
+
     private GameMap getRandomFreeMap() {
         List<GameMap> maps = new ArrayList<GameMap>(Main.getConfiguration().getGameMaps());
         for (Match match : matches) {
             maps.remove(match.getGameMap());
         }
         return maps.get(random.nextInt(maps.size()));
-    }
-
-    public void blockHitByArrow(Arrow arrow, Block block, Player player) {
-        for (Match match : matches) {
-            if (match.getRunnerPlayer() == player) {
-                match.runnerHitBlock(arrow, block);
-                break;
-            }
-        }
     }
 
     public boolean playerHitByArrow(Arrow arrow, Player player) {
@@ -96,15 +94,6 @@ public class GameManager {
             }
         }
         return false;
-    }
-
-    public void blockClicked(Block block, Player player) {
-        for (Match match : matches) {
-            if (match.getCatcherPlayer() == player) {
-                match.catcherClickedBlock(block);
-                break;
-            }
-        }
     }
 
 }

@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BallClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMoveListener(), this);
-        Bukkit.getPluginManager().registerEvents(new ItemPickupListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ItemPickupDropListener(), this);
         Bukkit.getPluginManager().registerEvents(new HopperPickupListener(), this);
     }
 

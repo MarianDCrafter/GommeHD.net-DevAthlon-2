@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Match {
 
     public enum Phase {
-        START, SHOOTING, RUNNING, END
+        START, SHOOTING, RUNNING
     }
 
     private final static int TIME_TO_START = 200;
@@ -35,6 +35,8 @@ public class Match {
     private Material hitBlockBeforeMaterial;
     private byte hitBlockBeforeData = 0;
     private Block hitBlock;
+
+    private int roundCount = 0;
 
     public Match(GameMap gameMap, UUID runner, UUID catcher) {
         this.gameMap = gameMap;
@@ -69,11 +71,14 @@ public class Match {
     }
 
     public void start() {
+        roundCount++;
         currentPhase = Phase.START;
 
         getRunnerPlayer().teleport(gameMap.getSpawn());
         getCatcherPlayer().teleport(gameMap.getSpawn());
 
+        time = TIME_TO_START;
+        sendRoles();
         sendTimeToStart();
         task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), new Runnable() {
             @Override
@@ -92,6 +97,11 @@ public class Match {
     private void sendMessage(String message) {
         getRunnerPlayer().sendMessage(message);
         getCatcherPlayer().sendMessage(message);
+    }
+
+    private void sendRoles() {
+        getRunnerPlayer().sendMessage(Message.message(ChatColor.GREEN + "Du wirst " + ChatColor.GOLD + "Runner" + ChatColor.GREEN + " sein."));
+        getCatcherPlayer().sendMessage(Message.message(ChatColor.GREEN + "Du wirst " + ChatColor.GOLD + "Catcher" + ChatColor.GREEN + " sein."));
     }
 
     private void sendTimeToStart() {
@@ -152,6 +162,8 @@ public class Match {
         runner.getInventory().addItem(new ItemStack(Material.ARROW));
 
         getCatcherPlayer().getInventory().clear();
+
+        // TODO sicherheitshalber inventory clearen, level zurücksetzen, kein feuer, keine Effekte, heilen, etc.
     }
 
     public void runnerHitBlock(Arrow arrow, Block block) {
@@ -194,7 +206,7 @@ public class Match {
     }
 
     public void catcherClickedBlock(Block block) {
-        if (!block.getLocation().equals(block.getLocation())) return;
+        if (!block.getLocation().equals(hitBlock.getLocation())) return;
         rollbackHitBlock();
         catcherGotBall();
     }
@@ -217,7 +229,18 @@ public class Match {
     }
 
     private void end() {
+        if (roundCount == 1) {
+            changeRoles();
+            start();
+        } else {
+            Main.getGameManager().stopMatch(this);
+        }
+    }
 
+    private void changeRoles() {
+        UUID newRunner = catcher;
+        catcher = runner;
+        runner = newRunner;
     }
 
     public int nextBaseIndex() {

@@ -5,6 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * Used to notify the GameManager when a player joins the server, so the GameManager can do some things with the player.
+ */
 public class JoinListener implements Listener {
 
     @SuppressWarnings("unused")
@@ -12,4 +15,5 @@ public class JoinListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Main.getGameManager().onJoin(event.getPlayer());
     }
+
 }
