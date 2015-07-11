@@ -13,4 +13,13 @@ public final class UUIDUtils {
         return uuid.toString().replace("-", "");
     }
 
+    /**
+     * Converts a string to a UUID
+     * @param uuid the uuid to convert
+     * @return the UUID
+     */
+    public static UUID stringToUUID(String uuid) {
+        return UUID.fromString(uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32));
+    }
+
 }

@@ -16,3 +16,6 @@ commands:
   stats:
     usage: /stats [Spieler]
     description: Öffnet die Stats zu einem Spieler.
+  ranking:
+    usage: /ranking
+    description: Zeigt die Top-5-Spieler

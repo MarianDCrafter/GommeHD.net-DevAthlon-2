@@ -91,7 +91,11 @@ public class Main extends JavaPlugin {
         getCommand("invite").setExecutor(startGameCommands);
         getCommand("accept").setExecutor(startGameCommands);
         getCommand("deny").setExecutor(startGameCommands);
-        getCommand("stats").setExecutor(new OpenStatsCommands());
+
+        // stats/ranking are used by OpenStatsCommands
+        OpenStatsCommands openStatsCommands = new OpenStatsCommands();
+        getCommand("stats").setExecutor(openStatsCommands);
+        getCommand("ranking").setExecutor(openStatsCommands);
     }
 
     /**

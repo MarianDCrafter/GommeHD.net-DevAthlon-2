@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde1.commands;
 
 import io.github.mariandcrafter.devathlon2.runde1.stats.PlayerStats;
+import io.github.mariandcrafter.devathlon2.runde1.stats.RankingStats;
 import io.github.mariandcrafter.devathlon2.runde1.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,7 +29,7 @@ public class OpenStatsCommands implements CommandExecutor {
 
         if (command.getName().equals("stats")) {
 
-            if(args.length == 0) {
+            if (args.length == 0) {
                 stats(player, player.getUniqueId());
             } else {
                 //noinspection deprecation
@@ -42,13 +43,18 @@ public class OpenStatsCommands implements CommandExecutor {
             }
             return true;
 
+        } else if(command.getName().equals("ranking")) {
+
+            new RankingStats(player).show();
+            return true;
+
         } else {
             return false;
         }
     }
 
     private void stats(Player player, UUID uuid) {
-        PlayerStats stats = new PlayerStats(player, uuid);
+        new PlayerStats(player, uuid).show();
     }
 
 }
