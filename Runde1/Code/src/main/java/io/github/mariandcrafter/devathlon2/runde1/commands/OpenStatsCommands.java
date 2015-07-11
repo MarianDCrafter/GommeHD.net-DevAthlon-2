@@ -30,7 +30,9 @@ public class OpenStatsCommands implements CommandExecutor {
         if (command.getName().equals("stats")) {
 
             if (args.length == 0) {
+                // send him his own stats
                 stats(player, player.getUniqueId());
+
             } else {
                 //noinspection deprecation
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
@@ -39,6 +41,7 @@ public class OpenStatsCommands implements CommandExecutor {
                     return true;
                 }
 
+                // send him the stats of the specified player
                 stats(player, offlinePlayer.getUniqueId());
             }
             return true;

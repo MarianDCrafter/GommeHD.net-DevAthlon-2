@@ -2,7 +2,9 @@ package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -66,6 +68,10 @@ public class HitBlock implements Runnable {
     public void run() {
         //noinspection deprecation
         block.setData((byte) (Math.random() * 16));
+
+        // play effect and sound
+        block.getWorld().playEffect(block.getLocation(), Effect.MOBSPAWNER_FLAMES, 5);
+        block.getWorld().playSound(block.getLocation(), Sound.FIREWORK_TWINKLE, 10, 1);
     }
 
 }

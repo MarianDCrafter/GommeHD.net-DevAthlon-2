@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
+/**
+ * Stats. They can be changed during a match.
+ */
 public class IngameStats {
 
     private boolean won = false;
@@ -65,6 +68,13 @@ public class IngameStats {
         return gotArrows;
     }
 
+    /**
+     * Insert this stats into the database.
+     * @param statement the statement to use
+     * @param uuid the uuid of the player
+     * @param matchID the id of match
+     * @throws SQLException
+     */
     public void insertIntoDatabase(Statement statement, UUID uuid, int matchID) throws SQLException {
         String sql = "INSERT INTO participations (matchID, player, won, startedRuns, finishedRuns, shootedArrows, " +
                 "enemyGotArrows, enemyShootedArrows, gotArrows) VALUES (" + matchID +  ", '" + UUIDUtils.stringFromUUID(uuid) + "', " +

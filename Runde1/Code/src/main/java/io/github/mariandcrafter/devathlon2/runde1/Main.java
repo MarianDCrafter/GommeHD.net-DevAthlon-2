@@ -50,9 +50,7 @@ public class Main extends JavaPlugin {
      */
     public void loadConfig() {
         saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
         configuration = new Configuration(getConfig());
-        // TODO config can not be changed with these statements
     }
 
     /**

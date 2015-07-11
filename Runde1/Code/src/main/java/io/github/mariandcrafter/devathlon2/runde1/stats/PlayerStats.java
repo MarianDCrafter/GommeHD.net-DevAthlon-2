@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
+/**
+ * Selects the stats of a player from the database.
+ */
 public class PlayerStats {
 
     private Player player;
@@ -23,11 +26,18 @@ public class PlayerStats {
     private int arrowsShooted, arrowsEnemyGot, arrowsEnemyGotNot;
     private int arrowsEnemyShooted, arrowsGot, arrowsGotNot;
 
+    /**
+     * @param player the player who wants to view the stats
+     * @param uuid the uuid of the player with the stats
+     */
     public PlayerStats(Player player, UUID uuid) {
         this.player = player;
         this.uuid = uuid;
     }
 
+    /**
+     * Loads the stats from the database in an external thread.
+     */
     public void show() {
         player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Statistiken werden geladen..."));
 
@@ -39,6 +49,9 @@ public class PlayerStats {
         }).start();
     }
 
+    /**
+     * Loads the stats from the database.
+     */
     private void load() {
         String uuidString = UUIDUtils.stringFromUUID(uuid);
 
@@ -97,6 +110,9 @@ public class PlayerStats {
         }
     }
 
+    /**
+     * Sends the stats to the player.
+     */
     private void send() {
         player.sendMessage(ChatColor.GRAY + "[]--------[] " + ChatColor.YELLOW + "Stats von " + ChatColor.GOLD + Bukkit.getOfflinePlayer(uuid).getName() + ChatColor.GRAY + " []--------[]");
         player.sendMessage(ChatColor.YELLOW + "- Rang: " + ChatColor.GOLD + "#" + place);

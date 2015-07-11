@@ -253,9 +253,9 @@ maps:
       base2:
         gateMaterial: COBBLE_WALL
         spawn:
-          x: 48.0
-          y: 87.0
-          z: -114
+          x: 44.0
+          y: 93.0
+          z: -234
           yaw: 0.0
           pitch: 0.0
         area:

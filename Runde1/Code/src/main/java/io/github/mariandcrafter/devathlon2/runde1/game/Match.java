@@ -4,9 +4,7 @@ import io.github.mariandcrafter.devathlon2.runde1.Main;
 import io.github.mariandcrafter.devathlon2.runde1.stats.IngameStats;
 import io.github.mariandcrafter.devathlon2.runde1.utils.MessageUtils;
 import io.github.mariandcrafter.devathlon2.runde1.utils.PlayerUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -154,6 +152,7 @@ public class Match {
 
     /**
      * Creates a message that someone has won versus the given player.
+     *
      * @param versus the player who lost
      * @return the message
      */
@@ -163,6 +162,7 @@ public class Match {
 
     /**
      * Creates a message that someone has lost versus the given player.
+     *
      * @param versus the player who won
      * @return the message
      */
@@ -201,6 +201,16 @@ public class Match {
     }
 
     /**
+     * Sends the number of reached bases of each player.
+     */
+    private void sendReachedBases() {
+        for (Map.Entry<UUID, IngameStats> entry : ingameStats.entrySet()) {
+            String playerName = Bukkit.getPlayer(entry.getKey()).getName();
+            sendMessage(MessageUtils.message(ChatColor.GREEN + playerName + " hat " + entry.getValue().getFinishedRuns() + " Bases erreicht."));
+        }
+    }
+
+    /**
      * Starts a new round. Increments roundCount, sets the phase to START, teleports the players to the spawn and starts
      * the timer.
      */
@@ -208,13 +218,13 @@ public class Match {
         roundCount++;
         currentPhase = Phase.START;
 
-        if(hitBlock != null) {
+        if (hitBlock != null) {
             hitBlock.stop();
             hitBlock = null;
         }
 
-        getRunnerPlayer().teleport(gameMap.getSpawn());
-        getCatcherPlayer().teleport(gameMap.getSpawn());
+        teleport(getRunnerPlayer(), gameMap.getSpawn());
+        teleport(getCatcherPlayer(), gameMap.getSpawn());
 
         time = TIME_TO_START;
         sendRoles();
@@ -240,8 +250,8 @@ public class Match {
     public void gameStart() {
         sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde beginnt!"));
 
-        getRunnerPlayer().teleport(gameMap.getBases().get(0).getSpawn());
-        getCatcherPlayer().teleport(gameMap.getCatcherSpawn());
+        teleport(getRunnerPlayer(), gameMap.getBases().get(0).getSpawn());
+        teleport(getCatcherPlayer(), gameMap.getCatcherSpawn());
 
         startInBase(0); // the runner has to start in the first base
 
@@ -279,6 +289,7 @@ public class Match {
             IngameStats runnerStats = ingameStats.get(getRunner());
             IngameStats catcherStats = ingameStats.get(getCatcher());
 
+            sendMessage(""); // eine leere Zeile
             if (runnerStats.getFinishedRuns() > catcherStats.getFinishedRuns()) {
                 runnerStats.won();
                 sendRunnerWon();
@@ -288,6 +299,8 @@ public class Match {
             } else {
                 sendItsADraw();
             }
+
+            sendReachedBases();
         }
     }
 
@@ -297,12 +310,12 @@ public class Match {
     public void stop() {
         Main.getGameManager().stopMatch(this);
 
-        if(hitBlock != null) {
+        if (hitBlock != null) {
             hitBlock.stop();
             hitBlock = null;
         }
 
-        if(task != null)
+        if (task != null)
             task.cancel();
 
         new Thread(new Runnable() {
@@ -343,15 +356,20 @@ public class Match {
         PlayerUtils.clear(getRunnerPlayer());
         PlayerUtils.clear(getCatcherPlayer());
 
-        if(hitBlock != null) {
+        if (hitBlock != null) {
             hitBlock.stop();
             hitBlock = null;
         }
 
         currentPhase = Phase.SHOOTING;
 
-        if (newBase > currentBase)
+        if (newBase != currentBase) {
+            // he reached the next base
             ingameStats.get(getRunner()).incrementFinishedRuns();
+
+            Player runner = getRunnerPlayer();
+            runner.getWorld().playSound(runner.getLocation(), Sound.FIREWORK_BLAST, 10, 1);
+        }
 
         // Change currentBase and close the open gates:
         gameMap.getBases().get(currentBase).closeExit();
@@ -365,6 +383,9 @@ public class Match {
 
         // Maybe the catcher has a nether star, clear it:
         getCatcherPlayer().getInventory().clear();
+
+        getRunnerPlayer().sendMessage(MessageUtils.message(ChatColor.RED + "Du musst jetzt den Pfeil in die Arena schießen."));
+        getCatcherPlayer().sendMessage(MessageUtils.message(ChatColor.RED + "Achtung, der Runner schießt jetzt den Pfeil."));
     }
 
     /**
@@ -388,6 +409,8 @@ public class Match {
             // the runner has not hit the valid area, give him a new arrow:
             getRunnerPlayer().getInventory().addItem(new ItemStack(Material.ARROW));
             getRunnerPlayer().updateInventory();
+
+            getRunnerPlayer().sendMessage(MessageUtils.message(ChatColor.GOLD + "Bitte schieß mit dem Pfeil in die Arena."));
         }
     }
 
@@ -407,6 +430,8 @@ public class Match {
     public void catcherGotBall() {
         getCatcherPlayer().getInventory().addItem(new ItemStack(Material.NETHER_STAR));
         getCatcherPlayer().updateInventory();
+
+        getCatcherPlayer().sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast den Ball. Droppe ihn in den Hopper in der Mitte."));
     }
 
     /**
@@ -427,8 +452,10 @@ public class Match {
      * Called when the catcher inserted a nether star into the hopper. The runner has to start again from the last base.
      */
     public void ballInsertedIntoHopper() {
+        getRunnerPlayer().sendMessage(MessageUtils.message(ChatColor.RED + "Der Gegener hat den Ball in den Hopper getan. Du wurdest zur letzten Base teleportiert."));
+
         startInBase(currentBase);
-        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
+        teleport(getRunnerPlayer(), gameMap.getBases().get(currentBase).getSpawn());
 
         ingameStats.get(getCatcher()).incrementGotArrows();
         ingameStats.get(getRunner()).incrementEnemyGotArrows();
@@ -438,22 +465,30 @@ public class Match {
      * Called when the catcher dies. He gets teleported to his spawn and the runner can start at the next base.
      */
     public void catcherDied() {
-        getCatcherPlayer().teleport(gameMap.getCatcherSpawn());
+        getRunnerPlayer().sendMessage(MessageUtils.message(ChatColor.GREEN + "Der Catcher ist gestorben und du wurdest zur nächsten Base teleportiert."));
+        getCatcherPlayer().sendMessage(MessageUtils.message(ChatColor.RED + "Du bist gestorben und der Runner wurde zur nächsten Base teleportiert."));
+
+        teleport(getCatcherPlayer(), gameMap.getCatcherSpawn());
 
         startInBase(nextBaseIndex());
-        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
+        teleport(getRunnerPlayer(), gameMap.getBases().get(currentBase).getSpawn());
+
     }
 
     /**
      * Called when the runner dies. He has to start again from the last base.
      */
     public void runnerDied() {
+        getRunnerPlayer().sendMessage(MessageUtils.message(ChatColor.RED + "Du bist gestorben und du wurdest zur letzten Base teleportiert."));
+        getCatcherPlayer().sendMessage(MessageUtils.message(ChatColor.GREEN + "Der Runner ist gestorben und wurde zur letzten Base teleportiert."));
+
         startInBase(currentBase);
-        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
+        teleport(getRunnerPlayer(), gameMap.getBases().get(currentBase).getSpawn());
     }
 
     /**
      * Calculates the index of the next base for the runner.
+     *
      * @return the index of the next base
      */
     public int nextBaseIndex() {
@@ -466,6 +501,22 @@ public class Match {
         }
     }
 
+    /**
+     * Teleports the player to the given location and plays an enderman sound.
+     *
+     * @param player     the player to teleport to
+     * @param toLocation the location where the player should be
+     */
+    private void teleport(Player player, Location toLocation) {
+        player.teleport(toLocation);
+
+        // play enderman sound
+        toLocation.getWorld().playSound(toLocation, Sound.ENDERMAN_TELEPORT, 10, 1);
+    }
+
+    /**
+     * Inserts the stats into the database.
+     */
     private void insertStatsIntoDatabase() {
         try {
             Statement statement = Main.getPluginDatabase().createStatement();
@@ -480,12 +531,13 @@ public class Match {
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) matchID = resultSet.getInt(1);
 
+            // insert player stats
             ingameStats.get(getRunner()).insertIntoDatabase(statement, getRunner(), matchID);
             ingameStats.get(getCatcher()).insertIntoDatabase(statement, getCatcher(), matchID);
 
             statement.close();
 
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

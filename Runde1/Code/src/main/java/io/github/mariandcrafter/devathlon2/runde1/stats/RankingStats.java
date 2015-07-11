@@ -11,14 +11,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Selects the top 5 players from the database.
+ */
 public class RankingStats {
 
     private Player player;
 
+    /**
+     * @param player the player who wants to view the stats
+     */
     public RankingStats(Player player) {
         this.player = player;
     }
 
+    /**
+     * Loads the stats from the database in an external thread.
+     */
     public void show() {
         player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Statistiken werden geladen..."));
 
@@ -30,6 +39,9 @@ public class RankingStats {
         }).start();
     }
 
+    /**
+     * Loads the stats from the database and sends them to the player.
+     */
     private void load() {
         try{
             Statement statement = Main.getPluginDatabase().createStatement();
