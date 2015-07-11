@@ -10,6 +10,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class JoinListener implements Listener {
 
+    /**
+     * Executed when a player joins the server.
+     */
     @SuppressWarnings("unused")
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

@@ -24,7 +24,7 @@ public class Main extends JavaPlugin {
         instance = this;
 
         loadConfig();
-        loadPlayerManager();
+        loadGameManager();
         loadListeners();
         loadCommands();
 
@@ -36,13 +36,21 @@ public class Main extends JavaPlugin {
         System.out.println("2. Devathlon, 1. Runde - GreenGlowPixel-Team - Plugin disabled!");
     }
 
+    /**
+     * Creates an instance of the Configuration class with the configuration file.
+     */
     public void loadConfig() {
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         configuration = new Configuration(getConfig());
+        // TODO config can not be changed with these statements
     }
 
-    public void loadPlayerManager() {
+    /**
+     * Creates an instance of GameManager. If there are already players on the server, the GameManager gets notified
+     * about it.
+     */
+    public void loadGameManager() {
         gameManager = new GameManager();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -50,6 +58,9 @@ public class Main extends JavaPlugin {
         }
     }
 
+    /**
+     * Registers every Listener.
+     */
     public void loadListeners() {
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
@@ -61,21 +72,34 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new HopperPickupListener(), this);
     }
 
+    /**
+     * Sets the command executors of the used commands in this plugin.
+     */
     public void loadCommands() {
+        // invite/accept/deny are used by StartGameCommands
         StartGameCommands startGameCommands = new StartGameCommands();
         getCommand("invite").setExecutor(startGameCommands);
         getCommand("accept").setExecutor(startGameCommands);
         getCommand("deny").setExecutor(startGameCommands);
     }
 
+    /**
+     * @return the instance of the main class
+     */
     public static Main getInstance() {
         return instance;
     }
 
+    /**
+     * @return the created instance of the Configuration class
+     */
     public static Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * @return the GameManager used by the plugin
+     */
     public static GameManager getGameManager() {
         return gameManager;
     }

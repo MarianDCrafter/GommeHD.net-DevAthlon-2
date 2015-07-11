@@ -36,10 +36,12 @@ public class ArrowListener implements Listener {
         }
 
         // Assuming the loop has found a block, we are searching in the list of matches for a game where the runner has
-        // shooted the arrow and notyfing the match afterwords:
+        // shooted the arrow and notifying the match afterwords:
         for (Match match : Main.getGameManager().getMatches()) {
-            if (match.getRunnerPlayer() == player) {
-                match.runnerHitBlock(arrow, block);
+            if (match.getRunnerPlayer() == player && match.getCurrentPhase() == Match.Phase.SHOOTING) {
+                // runner has shooted the array in the phase SHOOTING
+                arrow.remove();
+                match.runnerHitBlock(block);
                 break;
             }
         }

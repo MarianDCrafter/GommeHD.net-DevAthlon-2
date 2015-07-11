@@ -12,6 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class takes the configuration file in the constructor and loads the data from it.
+ */
 public class Configuration {
 
     private FileConfiguration configuration;
@@ -19,16 +22,29 @@ public class Configuration {
     private Location spawn;
     private List<GameMap> gameMaps;
 
+    /**
+     * @param configuration the configuration file of the plugin
+     */
     public Configuration(FileConfiguration configuration) {
         this.configuration = configuration;
+
         loadConfiguration();
     }
 
+    /**
+     * Loads the data from the file.
+     */
     private void loadConfiguration() {
         spawn = loadLocationWithYawAndPitch("lobbySpawn");
         gameMaps = loadMaps("maps");
     }
 
+    /**
+     * Loads the maps from the file.
+     *
+     * @param path the path to the maps section
+     * @return a list with all loaded maps
+     */
     private List<GameMap> loadMaps(String path) {
         List<GameMap> gameMaps = new ArrayList<GameMap>();
         for (String mapPath : configuration.getConfigurationSection(path).getKeys(false)) {
@@ -37,6 +53,12 @@ public class Configuration {
         return gameMaps;
     }
 
+    /**
+     * Loads a map from the file.
+     *
+     * @param path the path to the map section
+     * @return the loaded map
+     */
     private GameMap loadMap(String path) {
         World world = Bukkit.getWorld(configuration.getString(path + ".world"));
         return new GameMap(
@@ -50,6 +72,13 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads all bases of a map from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the bases section
+     * @return a list with all loaded bases
+     */
     private List<Base> loadBases(World world, String path) {
         List<Base> bases = new ArrayList<Base>();
         for (String basePath : configuration.getConfigurationSection(path).getKeys(false)) {
@@ -58,6 +87,13 @@ public class Configuration {
         return bases;
     }
 
+    /**
+     * Loads a base from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the base section
+     * @return the loaded base
+     */
     private Base loadBase(World world, String path) {
         return new Base(
                 Material.getMaterial(configuration.getString(path + ".gateMaterial")),
@@ -68,6 +104,13 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads all hopper locations of a map from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the hoppers section
+     * @return a list with all loaded hopper locations
+     */
     private List<Location> loadHoppers(World world, String path) {
         List<Location> hoppers = new ArrayList<Location>();
         for (String hopperPath : configuration.getConfigurationSection(path).getKeys(false)) {
@@ -76,6 +119,12 @@ public class Configuration {
         return hoppers;
     }
 
+    /**
+     * Loads a location with world, x, y, z, yaw and pitch.
+     *
+     * @param path the path to the location section
+     * @return the loaded location
+     */
     private Location loadLocationWithYawAndPitch(String path) {
         return new Location(
                 Bukkit.getWorld(configuration.getString(path + ".world")),
@@ -87,6 +136,13 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads a location with x, y, z, yaw and pitch.
+     *
+     * @param world the world of the location
+     * @param path  the path to the location section
+     * @return the loaded location
+     */
     private Location loadLocationWithYawAndPitch(World world, String path) {
         return new Location(
                 world,
@@ -98,6 +154,13 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads a location with x, y and z.
+     *
+     * @param world the world of the location
+     * @param path  the path to the location section
+     * @return the loaded location
+     */
     private Location loadBlockLocation(World world, String path) {
         return new Location(
                 world,
@@ -107,6 +170,13 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads an area with a start and an end location.
+     *
+     * @param world the world of the area
+     * @param path  the path to the area section
+     * @return the loaded area
+     */
     private Area loadArea(World world, String path) {
         return new Area(
                 loadBlockLocation(world, path + ".start"),
@@ -114,10 +184,16 @@ public class Configuration {
         );
     }
 
+    /**
+     * @return the spawn of the lobby
+     */
     public Location getSpawn() {
         return spawn;
     }
 
+    /**
+     * @return a list with all maps
+     */
     public List<GameMap> getGameMaps() {
         return gameMaps;
     }

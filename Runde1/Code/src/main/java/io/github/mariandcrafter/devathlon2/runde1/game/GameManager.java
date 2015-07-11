@@ -2,7 +2,6 @@ package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -48,10 +47,22 @@ public class GameManager {
         }
     }
 
+    /**
+     * Checks whether the given player is in a match.
+     *
+     * @param player the player to check
+     * @return {@code true} if he is in a match, otherwise {@code false}
+     */
     public boolean isPlaying(Player player) {
         return getMatch(player) != null;
     }
 
+    /**
+     * Used to get the current match of a player
+     *
+     * @param player the player to check
+     * @return the current match of the player if he is in a match, otherwise {@code null}
+     */
     public Match getMatch(Player player) {
         UUID uuid = player.getUniqueId();
         for (Match match : matches) {
@@ -62,16 +73,28 @@ public class GameManager {
         return null;
     }
 
+    /**
+     * Starts a new match with the two given players.
+     */
     public void startMatch(Player player1, Player player2) {
+
+        // Random roles:
         Match match;
-        if (random.nextBoolean()) match = new Match(getRandomFreeMap(), player1.getUniqueId(), player2.getUniqueId());
-        else match = new Match(getRandomFreeMap(), player2.getUniqueId(), player1.getUniqueId());
+        if (random.nextBoolean())
+            match = new Match(getRandomFreeMap(), player1.getUniqueId(), player2.getUniqueId());
+        else
+            match = new Match(getRandomFreeMap(), player2.getUniqueId(), player1.getUniqueId());
 
         matches.add(match);
 
         match.start();
     }
 
+    /**
+     * Removes the given match and teleports the players to the lobby spawn.
+     *
+     * @param match the match to remove
+     */
     public void stopMatch(Match match) {
         matches.remove(match);
 
@@ -79,21 +102,16 @@ public class GameManager {
         match.getRunnerPlayer().teleport(Main.getConfiguration().getSpawn());
     }
 
+    /**
+     * @return a random and currently not used map or {@code null} if there is no free map
+     */
     private GameMap getRandomFreeMap() {
         List<GameMap> maps = new ArrayList<GameMap>(Main.getConfiguration().getGameMaps());
         for (Match match : matches) {
             maps.remove(match.getGameMap());
         }
-        return maps.get(random.nextInt(maps.size()));
-    }
 
-    public boolean playerHitByArrow(Arrow arrow, Player player) {
-        for (Match match : matches) {
-            if (match.getCatcherPlayer() == player) {
-                return match.catcherHitByArrow(arrow);
-            }
-        }
-        return false;
+        return maps.get(this.random.nextInt(maps.size()));
     }
 
 }

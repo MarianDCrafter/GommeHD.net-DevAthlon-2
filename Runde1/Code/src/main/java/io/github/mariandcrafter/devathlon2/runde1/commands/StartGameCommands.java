@@ -1,7 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde1.commands;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
-import io.github.mariandcrafter.devathlon2.runde1.Message;
+import io.github.mariandcrafter.devathlon2.runde1.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -51,40 +51,40 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void invite(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
             return;
         }
         if (args.length == 0) {
-            player.sendMessage(Message.message(ChatColor.RED + "Verwendung des Befehls: /invite [Spieler]"));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Verwendung des Befehls: /invite [Spieler]"));
             return;
         }
 
         Player invitedPlayer = Bukkit.getPlayer(args[0]);
         if (invitedPlayer == null) {
-            player.sendMessage(Message.message(ChatColor.RED + "Der Spieler " + args[0] + " ist nicht online."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Der Spieler " + args[0] + " ist nicht online."));
             return;
         }
         if (Main.getGameManager().getInvitations().get(invitedPlayer.getUniqueId()) == player.getUniqueId()) {
-            player.sendMessage(Message.message(ChatColor.RED + "Der Spieler " + invitedPlayer.getName() + " hat dich bereits eingeladen."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Der Spieler " + invitedPlayer.getName() + " hat dich bereits eingeladen."));
             return;
         }
         if (Main.getGameManager().getInvitations().get(player.getUniqueId()) == invitedPlayer.getUniqueId()) {
-            player.sendMessage(Message.message(ChatColor.RED + "Du hast den Spieler " + invitedPlayer.getName() + " bereits eingeladen."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Du hast den Spieler " + invitedPlayer.getName() + " bereits eingeladen."));
             return;
         }
         if (Main.getGameManager().isPlaying(invitedPlayer)) {
-            player.sendMessage(Message.message(ChatColor.RED + "Der Spieler " + invitedPlayer.getName() + " ist gerade in einem Spiel."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Der Spieler " + invitedPlayer.getName() + " ist gerade in einem Spiel."));
             return;
         }
 
         UUID invitedBefore = Main.getGameManager().getInvitations().get(player.getUniqueId());
         if (invitedBefore != null) {
             // If he has already invited somebody, he will reject the first invitation.
-            player.sendMessage(Message.message(ChatColor.GOLD + "Du hast die Einladung an " + Bukkit.getPlayer(invitedBefore).getName() + " zurückgenommen."));
+            player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast die Einladung an " + Bukkit.getPlayer(invitedBefore).getName() + " zurückgenommen."));
         }
 
-        player.sendMessage(Message.message(ChatColor.GOLD + "Du hast eine Einladung an " + invitedPlayer.getName() + " gesendet."));
-        invitedPlayer.sendMessage(Message.message(ChatColor.GOLD + "Du hast eine Einladung von " + player.getName() + " bekommen."));
+        player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast eine Einladung an " + invitedPlayer.getName() + " gesendet."));
+        invitedPlayer.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast eine Einladung von " + player.getName() + " bekommen."));
 
         Main.getGameManager().getInvitations().put(player.getUniqueId(), invitedPlayer.getUniqueId());
     }
@@ -96,15 +96,15 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void accept(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
             return;
         }
 
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
 
-        player.sendMessage(Message.message(ChatColor.GOLD + "Du hast die Einladung von " + inviter.getName() + " angenommen."));
-        inviter.sendMessage(Message.message(ChatColor.GOLD + player.getName() + " hat deine Einladung angenommen."));
+        player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast die Einladung von " + inviter.getName() + " angenommen."));
+        inviter.sendMessage(MessageUtils.message(ChatColor.GOLD + player.getName() + " hat deine Einladung angenommen."));
 
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
         Main.getGameManager().startMatch(player, inviter);
@@ -117,15 +117,15 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void deny(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            player.sendMessage(Message.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Du bist gerade in einem Spiel."));
             return;
         }
 
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
 
-        player.sendMessage(Message.message(ChatColor.GOLD + "Du hast die Einladung von " + inviter.getName() + " abgelehnt."));
-        inviter.sendMessage(Message.message(ChatColor.GOLD + player.getName() + " hat deine Einladung abgelehnt."));
+        player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast die Einladung von " + inviter.getName() + " abgelehnt."));
+        inviter.sendMessage(MessageUtils.message(ChatColor.GOLD + player.getName() + " hat deine Einladung abgelehnt."));
 
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
     }
@@ -149,14 +149,14 @@ public class StartGameCommands implements CommandExecutor {
             if (inviter == null) {
                 // If he hasn't been invited by someone OR if there are more than one invitations, the method
                 // getPlayerWhoInvited() returns null.
-                player.sendMessage(Message.message(ChatColor.RED + "Du wurdest von niemandem eingeladen oder du hast mehrere Einladungen erhalten, weshalb du zusätzlich einen Spieler angeben musst (/deny [Spieler])"));
+                player.sendMessage(MessageUtils.message(ChatColor.RED + "Du wurdest von niemandem eingeladen oder du hast mehrere Einladungen erhalten, weshalb du zusätzlich einen Spieler angeben musst (/deny [Spieler])"));
                 return null;
             }
         } else {
             inviter = Bukkit.getPlayer(args[0]);
 
             if (Main.getGameManager().getInvitations().get(inviter.getUniqueId()) != player.getUniqueId()) {
-                player.sendMessage(Message.message(ChatColor.RED + "Du wurdest nicht von " + args[0] + " eingeladen."));
+                player.sendMessage(MessageUtils.message(ChatColor.RED + "Du wurdest nicht von " + args[0] + " eingeladen."));
                 return null;
             }
         }

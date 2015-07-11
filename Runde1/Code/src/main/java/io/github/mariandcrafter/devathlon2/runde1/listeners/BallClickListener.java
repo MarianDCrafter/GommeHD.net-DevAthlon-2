@@ -26,8 +26,11 @@ public class BallClickListener implements Listener {
 
         // Search for the match where the catcher is the player who clicked on the block and notify the match:
         for (Match match : Main.getGameManager().getMatches()) {
-            if (match.getCatcherPlayer() == player) {
-                match.catcherClickedBlock(event.getClickedBlock());
+            if (match.getCatcherPlayer() == player &&
+                    match.getHitBlock() != null && match.getHitBlock().is(event.getClickedBlock())) {
+                // catcher has clicked on the block hit by the runner
+
+                match.catcherClickedBlock();
                 break;
             }
         }
