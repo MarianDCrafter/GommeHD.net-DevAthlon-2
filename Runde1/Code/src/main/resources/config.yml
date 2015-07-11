@@ -355,10 +355,7 @@ maps:
             z: -185
     hoppers:
       hopper1:
-        x: 33
-        y: 88
-        z: -92
-      hopper2:
-        x: 33
-        y: 88
-        z: -91
+        x: 28
+        y: 95
+        z: -210
+
