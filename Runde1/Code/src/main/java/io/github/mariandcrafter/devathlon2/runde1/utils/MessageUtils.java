@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 /**
  * Utils for messages that can be sent to players.
  */
-public class MessageUtils {
+public final class MessageUtils {
 
     /**
      * Creates a new string with the prefix and the given message.

@@ -29,7 +29,7 @@ public class PlayerMoveListener implements Listener {
 
         if (match == null ||
                 match.getCurrentPhase() != Match.Phase.RUNNING ||
-                match.getRunnerPlayer() == player) return;
+                match.getRunnerPlayer() != player) return;
         // the player has to be in a match, he must be the runner and the current phase should be RUNNING
 
         int nextBase = match.nextBaseIndex(); // index of next base in the list of bases

@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
+import io.github.mariandcrafter.devathlon2.runde1.utils.PlayerUtils;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -28,7 +29,7 @@ public class GameManager {
     public void onJoin(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Main.getConfiguration().getSpawn());
-        // TODO sicherheitshalber inventory clearen, level zurücksetzen, kein feuer, keine Effekte, heilen, etc.
+        PlayerUtils.clear(player);
     }
 
     /**

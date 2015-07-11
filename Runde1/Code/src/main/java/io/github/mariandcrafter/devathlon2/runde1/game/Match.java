@@ -2,6 +2,7 @@ package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
 import io.github.mariandcrafter.devathlon2.runde1.utils.MessageUtils;
+import io.github.mariandcrafter.devathlon2.runde1.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -54,8 +55,10 @@ public class Match {
         this.runner = runner;
         this.catcher = catcher;
 
-        // Close all gates of the map for safety reasons:
+        // Close all gates of the map and clear the players for safety reasons:
         gameMap.closeAllGates();
+        PlayerUtils.clear(getRunnerPlayer());
+        PlayerUtils.clear(getCatcherPlayer());
     }
 
     /**
@@ -129,14 +132,14 @@ public class Match {
      * Sends the players the start countdown.
      */
     private void sendTimeToStart() {
-        sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde beginnt in " + ChatColor.GOLD + (time / 20) + ChatColor.GREEN + " Sekunden!"));
+        sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde beginnt in " + ChatColor.GOLD + time + ChatColor.GREEN + " Sekunden!"));
     }
 
     /**
      * Sends the players the end countdown.
      */
     private void sendTimeToEnd() {
-        sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde endet in " + ChatColor.GOLD + (time / 20) + ChatColor.GREEN + " Sekunden!"));
+        sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde endet in " + ChatColor.GOLD + time + ChatColor.GREEN + " Sekunden!"));
     }
 
     /**
@@ -146,6 +149,11 @@ public class Match {
     public void start() {
         roundCount++;
         currentPhase = Phase.START;
+
+        if(hitBlock != null) {
+            hitBlock.stop();
+            hitBlock = null;
+        }
 
         getRunnerPlayer().teleport(gameMap.getSpawn());
         getCatcherPlayer().teleport(gameMap.getSpawn());
@@ -204,6 +212,11 @@ public class Match {
             start();
         } else {
             Main.getGameManager().stopMatch(this);
+
+            if(hitBlock != null) {
+                hitBlock.stop();
+                hitBlock = null;
+            }
         }
     }
 
@@ -222,6 +235,15 @@ public class Match {
      * @param newBase the index of the base
      */
     public void startInBase(int newBase) {
+        // Clear the players to heal them etc.:
+        PlayerUtils.clear(getRunnerPlayer());
+        PlayerUtils.clear(getCatcherPlayer());
+
+        if(hitBlock != null) {
+            hitBlock.stop();
+            hitBlock = null;
+        }
+
         currentPhase = Phase.SHOOTING;
 
         // Change currentBase and close the open gates:
@@ -260,14 +282,6 @@ public class Match {
     }
 
     /**
-     * Called when the catcher got hit by the runner with the arrow. The catcher immediately 'catched' the ball.
-     */
-    public void runnerHitCatcherWithArrow() {
-        startRunToNextBase();
-        catcherGotBall();
-    }
-
-    /**
      * Called when the catcher clicked on the hit block. The hit block gets removed and the catcher gets the nether star.
      */
     public void catcherClickedBlock() {
@@ -300,8 +314,8 @@ public class Match {
      * Called when the catcher inserted a nether star into the hopper. The runner has to start again from the last base.
      */
     public void ballInsertedIntoHopper() {
-        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
         startInBase(currentBase);
+        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
     }
 
     /**
@@ -318,8 +332,8 @@ public class Match {
      * Called when the runner dies. He has to start again from the last base.
      */
     public void runnerDied() {
-        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
         startInBase(currentBase);
+        getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
     }
 
     /**

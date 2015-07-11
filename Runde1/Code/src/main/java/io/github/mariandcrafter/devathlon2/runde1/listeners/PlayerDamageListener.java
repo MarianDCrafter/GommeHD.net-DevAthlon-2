@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 /**
  * Used to prevent the players from PvP and other damage (only in lobby).
- * This class also checks whether the runner hits the catcher with the arrow.
+ * This class also checks whether the runner hits the catcher with the arrow, this is not possible.
  */
 public class PlayerDamageListener implements Listener {
 
@@ -24,7 +24,14 @@ public class PlayerDamageListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return; // we only want to listen to damaged players
         Player player = (Player) event.getEntity();
 
-        if (event instanceof EntityDamageByEntityEvent) {
+        if (!Main.getGameManager().isPlaying(player)) {
+            // Players in the lobby shouldn't get damage.
+            event.setCancelled(true);
+
+        } else if (event instanceof EntityDamageByEntityEvent) {
+            // If the player is in a game, he can get damage, but not from the other player and not if the runner shootes
+            // the catcher with an arrow.
+
             EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
 
             if (damageByEntityEvent.getDamager() instanceof Arrow) {
@@ -32,26 +39,17 @@ public class PlayerDamageListener implements Listener {
 
                 // Search for the match where the catcher has been hit by the runner:
                 for (Match match : Main.getGameManager().getMatches()) {
-                    if (match.getCatcherPlayer() == player && match.getRunnerPlayer() == arrow.getShooter() &&
-                            match.getCurrentPhase() == Match.Phase.SHOOTING) {
-                        // The current phase should be SHOOTING, because in other phases the runner shouldn't be able
-                        // to shoot.
-
-                        match.runnerHitCatcherWithArrow();
-                        arrow.remove();
+                    if (match.getCatcherPlayer() == player && match.getRunnerPlayer() == arrow.getShooter()) {
+                        // runner shooted catcher, cancel:
                         event.setCancelled(true);
-                        break;
                     }
                 }
 
             } else if (damageByEntityEvent.getDamager() instanceof Player) {
-                // PvP is disabled in every case
+                // PvP is always disabled
                 event.setCancelled(true);
             }
 
-        } else if (!Main.getGameManager().isPlaying(player)) {
-            // Other damages (not EntityDamageByEntity) are only cancelled in the lobby.
-            event.setCancelled(true);
         }
 
         if (!event.isCancelled() && player.getHealth() - event.getDamage() <= 0) {
@@ -67,7 +65,6 @@ public class PlayerDamageListener implements Listener {
                     match.runnerDied();
                     break;
                 }
-                // TODO clear player
             }
         }
     }
