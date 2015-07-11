@@ -13,3 +13,6 @@ commands:
   deny:
     usage: /deny [Spieler]
     description: Lehnt die Anfrage vom angegebenen Spieler ab. Dieser kann weggelassen werden, wenn man nur eine Anfrage hat.
+  stats:
+    usage: /stats [Spieler]
+    description: Öffnet die Stats zu einem Spieler.

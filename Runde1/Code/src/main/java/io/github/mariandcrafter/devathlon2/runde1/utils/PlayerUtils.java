@@ -25,6 +25,7 @@ public final class PlayerUtils {
         player.resetMaxHealth();
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
+        player.getInventory().clear();
     }
 
 }

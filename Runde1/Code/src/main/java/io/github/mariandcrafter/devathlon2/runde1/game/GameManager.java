@@ -49,7 +49,7 @@ public class GameManager {
 
         Match match = getMatch(player);
         if (match != null) {
-            match.stop();
+            match.playerLeft();
         }
     }
 

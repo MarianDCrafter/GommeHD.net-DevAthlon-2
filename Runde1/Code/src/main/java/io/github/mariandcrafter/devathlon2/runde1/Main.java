@@ -1,9 +1,13 @@
 package io.github.mariandcrafter.devathlon2.runde1;
 
+import io.github.mariandcrafter.devathlon2.runde1.commands.OpenStatsCommands;
 import io.github.mariandcrafter.devathlon2.runde1.commands.StartGameCommands;
 import io.github.mariandcrafter.devathlon2.runde1.game.GameManager;
 import io.github.mariandcrafter.devathlon2.runde1.listeners.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +20,7 @@ public class Main extends JavaPlugin {
     private static Main instance;
     private static Configuration configuration;
     private static GameManager gameManager;
+    private static Database database;
 
     private List<Listener> listeners;
 
@@ -27,12 +32,16 @@ public class Main extends JavaPlugin {
         loadGameManager();
         loadListeners();
         loadCommands();
+        removeEntities();
+        loadDatabase();
 
         System.out.println("2. Devathlon, 1. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
 
     @Override
     public void onDisable() {
+        database.close();
+
         System.out.println("2. Devathlon, 1. Runde - GreenGlowPixel-Team - Plugin disabled!");
     }
 
@@ -82,6 +91,28 @@ public class Main extends JavaPlugin {
         getCommand("invite").setExecutor(startGameCommands);
         getCommand("accept").setExecutor(startGameCommands);
         getCommand("deny").setExecutor(startGameCommands);
+        getCommand("stats").setExecutor(new OpenStatsCommands());
+    }
+
+    /**
+     * Sets difficulty to PEACEFUL and removes all entities in all maps.
+     */
+    public void removeEntities() {
+        for (World world : Bukkit.getWorlds()) {
+            world.setDifficulty(Difficulty.PEACEFUL);
+            for (Entity entity : world.getEntities()) {
+                if (!(entity instanceof Player))
+                    entity.remove();
+            }
+        }
+    }
+
+    /**
+     * Connects to the database.
+     */
+    public void loadDatabase() {
+        database = configuration.getDatabase();
+        database.connect();
     }
 
     /**
@@ -103,6 +134,13 @@ public class Main extends JavaPlugin {
      */
     public static GameManager getGameManager() {
         return gameManager;
+    }
+
+    /**
+     * @return the Database used by the plugin
+     */
+    public static Database getPluginDatabase() {
+        return database;
     }
 
 }

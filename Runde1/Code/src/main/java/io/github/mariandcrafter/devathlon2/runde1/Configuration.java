@@ -20,6 +20,7 @@ public class Configuration {
     private FileConfiguration configuration;
 
     private Location spawn;
+    private Database database;
     private List<GameMap> gameMaps;
 
     /**
@@ -36,7 +37,24 @@ public class Configuration {
      */
     private void loadConfiguration() {
         spawn = loadLocationWithYawAndPitch("lobbySpawn");
+        database = loadDatabase("database");
         gameMaps = loadMaps("maps");
+    }
+
+    /**
+     * Loads the database data from the file.
+     *
+     * @param path the path to the database section
+     * @return the database
+     */
+    private Database loadDatabase(String path) {
+        return new Database(
+                configuration.getString(path + ".host"),
+                configuration.getString(path + ".port"),
+                configuration.getString(path + ".database"),
+                configuration.getString(path + ".user"),
+                configuration.getString(path + ".password")
+        );
     }
 
     /**
@@ -189,6 +207,13 @@ public class Configuration {
      */
     public Location getSpawn() {
         return spawn;
+    }
+
+    /**
+     * @return the database
+     */
+    public Database getDatabase() {
+        return database;
     }
 
     /**

@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde1.game;
 
 import io.github.mariandcrafter.devathlon2.runde1.Main;
+import io.github.mariandcrafter.devathlon2.runde1.stats.IngameStats;
 import io.github.mariandcrafter.devathlon2.runde1.utils.MessageUtils;
 import io.github.mariandcrafter.devathlon2.runde1.utils.PlayerUtils;
 import org.bukkit.Bukkit;
@@ -11,6 +12,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -34,6 +40,7 @@ public class Match {
     private GameMap gameMap;
     private UUID runner;
     private UUID catcher;
+    private Map<UUID, IngameStats> ingameStats = new HashMap<UUID, IngameStats>();
 
     private int time;
     private BukkitTask task;
@@ -54,6 +61,9 @@ public class Match {
         this.gameMap = gameMap;
         this.runner = runner;
         this.catcher = catcher;
+
+        ingameStats.put(runner, new IngameStats());
+        ingameStats.put(catcher, new IngameStats());
 
         // Close all gates of the map and clear the players for safety reasons:
         gameMap.closeAllGates();
@@ -143,6 +153,54 @@ public class Match {
     }
 
     /**
+     * Creates a message that someone has won versus the given player.
+     * @param versus the player who lost
+     * @return the message
+     */
+    private String getWonMessage(Player versus) {
+        return MessageUtils.message(ChatColor.GREEN + "Du hast gegen " + versus.getName() + " gewonnen!");
+    }
+
+    /**
+     * Creates a message that someone has lost versus the given player.
+     * @param versus the player who won
+     * @return the message
+     */
+    private String getLostMessage(Player versus) {
+        return MessageUtils.message(ChatColor.GREEN + "Du hast gegen " + versus.getName() + " verloren!");
+    }
+
+    /**
+     * Sends the players the messages that the runner has won.
+     */
+    private void sendRunnerWon() {
+        getRunnerPlayer().sendMessage(getWonMessage(getCatcherPlayer()));
+        getCatcherPlayer().sendMessage(getLostMessage(getRunnerPlayer()));
+    }
+
+    /**
+     * Sends the players the messages that the catcher has won.
+     */
+    private void sendCatcherWon() {
+        getCatcherPlayer().sendMessage(getWonMessage(getRunnerPlayer()));
+        getRunnerPlayer().sendMessage(getLostMessage(getCatcherPlayer()));
+    }
+
+    /**
+     * Sends the players the messages that it's a draw.
+     */
+    private void sendItsADraw() {
+        sendMessage(MessageUtils.message(ChatColor.GREEN + "Unentschieden!"));
+    }
+
+    /**
+     * Sends the players that the other left.
+     */
+    private void sendEnemyLeft() {
+        sendMessage(MessageUtils.message(ChatColor.GREEN + "Dein Gegner hat das Spiel verlassen"));
+    }
+
+    /**
      * Starts a new round. Increments roundCount, sets the phase to START, teleports the players to the spawn and starts
      * the timer.
      */
@@ -209,11 +267,27 @@ public class Match {
      * the match gets stopped.
      */
     private void endRound() {
+        getRunnerPlayer().getInventory().clear();
+        getCatcherPlayer().getInventory().clear();
+
         if (roundCount == 1) {
             changeRoles();
             start();
         } else {
             stop();
+
+            IngameStats runnerStats = ingameStats.get(getRunner());
+            IngameStats catcherStats = ingameStats.get(getCatcher());
+
+            if (runnerStats.getFinishedRuns() > catcherStats.getFinishedRuns()) {
+                runnerStats.won();
+                sendRunnerWon();
+            } else if (runnerStats.getFinishedRuns() < catcherStats.getFinishedRuns()) {
+                catcherStats.won();
+                sendCatcherWon();
+            } else {
+                sendItsADraw();
+            }
         }
     }
 
@@ -230,6 +304,24 @@ public class Match {
 
         if(task != null)
             task.cancel();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                insertStatsIntoDatabase();
+            }
+        }).start();
+    }
+
+    /**
+     * Called when a participant lefts.
+     */
+    public void playerLeft() {
+        stop();
+        sendEnemyLeft();
+
+        getRunnerPlayer().getInventory().clear();
+        getCatcherPlayer().getInventory().clear();
     }
 
     /**
@@ -258,6 +350,9 @@ public class Match {
 
         currentPhase = Phase.SHOOTING;
 
+        if (newBase > currentBase)
+            ingameStats.get(getRunner()).incrementFinishedRuns();
+
         // Change currentBase and close the open gates:
         gameMap.getBases().get(currentBase).closeExit();
         currentBase = newBase;
@@ -266,11 +361,10 @@ public class Match {
         Player runner = getRunnerPlayer();
         runner.getInventory().addItem(new ItemStack(Material.BOW));
         runner.getInventory().addItem(new ItemStack(Material.ARROW));
+        runner.updateInventory();
 
         // Maybe the catcher has a nether star, clear it:
         getCatcherPlayer().getInventory().clear();
-
-        // TODO sicherheitshalber inventory clearen, level zurücksetzen, kein feuer, keine Effekte, heilen, etc.
     }
 
     /**
@@ -287,9 +381,13 @@ public class Match {
             hitBlock.start();
             startRunToNextBase();
 
+            ingameStats.get(getRunner()).incrementShootedArrows();
+            ingameStats.get(getCatcher()).incrementEnemyShootedArrows();
+
         } else {
             // the runner has not hit the valid area, give him a new arrow:
             getRunnerPlayer().getInventory().addItem(new ItemStack(Material.ARROW));
+            getRunnerPlayer().updateInventory();
         }
     }
 
@@ -308,6 +406,7 @@ public class Match {
      */
     public void catcherGotBall() {
         getCatcherPlayer().getInventory().addItem(new ItemStack(Material.NETHER_STAR));
+        getCatcherPlayer().updateInventory();
     }
 
     /**
@@ -320,6 +419,8 @@ public class Match {
 
         // clear the bow from his inventory:
         getRunnerPlayer().getInventory().clear();
+
+        ingameStats.get(getRunner()).incrementStartedRuns();
     }
 
     /**
@@ -328,6 +429,9 @@ public class Match {
     public void ballInsertedIntoHopper() {
         startInBase(currentBase);
         getRunnerPlayer().teleport(gameMap.getBases().get(currentBase).getSpawn());
+
+        ingameStats.get(getCatcher()).incrementGotArrows();
+        ingameStats.get(getRunner()).incrementEnemyGotArrows();
     }
 
     /**
@@ -359,6 +463,30 @@ public class Match {
         } else {
             // not last base, simply add 1 to the index
             return currentBase + 1;
+        }
+    }
+
+    private void insertStatsIntoDatabase() {
+        try {
+            Statement statement = Main.getPluginDatabase().createStatement();
+
+            // insert match
+            String sql = "INSERT INTO matches (mapName) VALUES ('" + getGameMap().getName() + "')";
+            System.out.println(sql);
+            statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+
+            // get match id
+            int matchID = 0;
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) matchID = resultSet.getInt(1);
+
+            ingameStats.get(getRunner()).insertIntoDatabase(statement, getRunner(), matchID);
+            ingameStats.get(getCatcher()).insertIntoDatabase(statement, getCatcher(), matchID);
+
+            statement.close();
+
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
     }
 
