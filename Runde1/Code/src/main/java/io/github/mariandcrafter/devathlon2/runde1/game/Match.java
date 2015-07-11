@@ -136,7 +136,7 @@ public class Match {
     }
 
     /**
-     * Sends the players the end countdown.
+     * Sends the players the endRound countdown.
      */
     private void sendTimeToEnd() {
         sendMessage(MessageUtils.message(ChatColor.GREEN + "Die Runde endet in " + ChatColor.GOLD + time + ChatColor.GREEN + " Sekunden!"));
@@ -167,6 +167,7 @@ public class Match {
                 time--;
                 if (time == 0) {
                     task.cancel();
+                    task = null;
                     gameStart(); // game can start now, because the time is 0
                 } else {
                     sendTimeToStart();
@@ -194,7 +195,8 @@ public class Match {
                 time--;
                 if (time == 0) {
                     task.cancel();
-                    end(); // game can end now, because the time is 0
+                    task = null;
+                    endRound(); // game can end now, because the time is 0
                 } else if (time % 60 == 0 || (time <= 30 && time % 10 == 0) || (time <= 3)) {
                     sendTimeToEnd();
                 }
@@ -206,18 +208,28 @@ public class Match {
      * Ends the current round. If only one has been played, the players change the roles and start again. Otherwise
      * the match gets stopped.
      */
-    private void end() {
+    private void endRound() {
         if (roundCount == 1) {
             changeRoles();
             start();
         } else {
-            Main.getGameManager().stopMatch(this);
-
-            if(hitBlock != null) {
-                hitBlock.stop();
-                hitBlock = null;
-            }
+            stop();
         }
+    }
+
+    /**
+     * Stops this round.
+     */
+    public void stop() {
+        Main.getGameManager().stopMatch(this);
+
+        if(hitBlock != null) {
+            hitBlock.stop();
+            hitBlock = null;
+        }
+
+        if(task != null)
+            task.cancel();
     }
 
     /**

@@ -46,6 +46,11 @@ public class GameManager {
                 invitations.remove(entry.getKey());
             }
         }
+
+        Match match = getMatch(player);
+        if (match != null) {
+            match.stop();
+        }
     }
 
     /**
@@ -76,19 +81,26 @@ public class GameManager {
 
     /**
      * Starts a new match with the two given players.
+     * @return {@code true} if the match can start, otherwise {@code false}
      */
-    public void startMatch(Player player1, Player player2) {
+    public boolean startMatch(Player player1, Player player2) {
+
+        GameMap map = getRandomFreeMap();
+        if(map == null)
+            return false;
 
         // Random roles:
         Match match;
         if (random.nextBoolean())
-            match = new Match(getRandomFreeMap(), player1.getUniqueId(), player2.getUniqueId());
+            match = new Match(map, player1.getUniqueId(), player2.getUniqueId());
         else
-            match = new Match(getRandomFreeMap(), player2.getUniqueId(), player1.getUniqueId());
+            match = new Match(map, player2.getUniqueId(), player1.getUniqueId());
 
         matches.add(match);
 
         match.start();
+
+        return true;
     }
 
     /**
@@ -111,6 +123,9 @@ public class GameManager {
         for (Match match : matches) {
             maps.remove(match.getGameMap());
         }
+
+        if (maps.size() == 0)
+            return null;
 
         return maps.get(this.random.nextInt(maps.size()));
     }

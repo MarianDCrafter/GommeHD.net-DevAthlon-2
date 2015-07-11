@@ -103,11 +103,16 @@ public class StartGameCommands implements CommandExecutor {
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
 
+        if(!Main.getGameManager().startMatch(player, inviter)) {
+            player.sendMessage(MessageUtils.message(ChatColor.RED + "Du kannst die Einladung von " + inviter.getName() + " nicht annehmen, da keine Map frei ist."));
+            inviter.sendMessage(MessageUtils.message(ChatColor.RED + player.getName() + " konnte deine Einladung nicht annehmen, da keine Map frei ist."));
+            return;
+        }
+
         player.sendMessage(MessageUtils.message(ChatColor.GOLD + "Du hast die Einladung von " + inviter.getName() + " angenommen."));
         inviter.sendMessage(MessageUtils.message(ChatColor.GOLD + player.getName() + " hat deine Einladung angenommen."));
 
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
-        Main.getGameManager().startMatch(player, inviter);
     }
 
     /**
