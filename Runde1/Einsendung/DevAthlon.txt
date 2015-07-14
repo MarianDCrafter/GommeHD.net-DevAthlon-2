@@ -1,0 +1,61 @@
+Zwei Maps und die Lobby sind bereits standardmŠ§ig in der Welt und der config.yml enthalten, daher muss der Ordner âworldÔ als Welt benutzt werden!
+Die config.yml kann angepasst werden, um die Datenbankdaten zu Šndern, Spawns zu Šndern, um Maps hinzuzufŸgen, zu Šndern, zu lšschen etc.
+Sollten Maps nicht korrekt eingetragen sein, kann dies zu Fehlern fŸhren!
+Wie Maps konfiguriert werden, sollte aus der Standard-config erkennbar sein und wurde daher auch aus ZeitgrŸnden nicht genau dokumentiert!
+
+Es muss auch unbedingt eine Datenbank in der config.yml konfiguriert werden, da es sonst zu Fehlern kommen kann! DafŸr muss vorher âdatabase.sqlÔ ausgefŸhrt werden. Diese Datei erstellt die benštigten Tabellen.
+
+**********
+
+Wir, GreenGlowPixel haben folgendes Spiel entwickelt:
+
+**********
+
+Es funkioniert folgenderma§en:
+
+Man kann in der Lobby Mitspieler mit "/invite [Name]" herrausfordern.
+Mit "/accept" bei nur einer Anfrage oder "/accept [Name]" bei mehreren Anfragen nimmt man
+die Herrausforderung an. 
+Mit /deny [name] lehnt man eine Herausforderung ab.
+Mit dem "/stats" Command kann man seine eigenden Statistiken anzeigen.
+Dazu zählen z.b.: gespielte Spiele, begonnene Läufe, geschossene Pfeile, vom Gegner geschossene
+Pfeile.
+Mit /stats [Name] kann man von anderen Spielern die Statistiken sehen.
+Der Command /ranking zeigt die besten Spieler an.
+Nach annahme einer Herrausforderung werden beide Spieler in eine zufällige Map teleportiert.
+Es stehen zwei verschiedene Maps zur Verfügung.
+Dann wird die Spielergruppe zufällig festgelegt.
+
+
+Es gibt zwei verschiedene Gruppen von Spielern:
+
+-Runner (Läufer)
+-Catcher (Fänger)
+
+Der Runner spawnt bei Spielbeginn in einer Ecke der Map wo er mit einem Bogen und einem Pfeil 
+ausgestattet wird.
+Der Runner hat nun die Gelegenheit den Pfeil in die "Mitte" zu schießen. Am besten irgendwo wo der
+Catcher ihn schwer findet.
+Nun muss der Runner einen kleinen Parkour überwinden um zur nächsten Base in der nächsten Ecke zu
+kommen. Diese Base dient als Checkpoint und man hat eine neue Chance den Pfeil zu schießen.
+Der Runner hat 2 Minuten Zeit um so viele Checkpoints/Bases wie möglich zu erreichen. 
+Danach werden die Rollen getauscht und der Runner wird zum Catcher und umgekehrt.
+
+Wenn der Pfeil in den Mittleren Bereich geschossen wurde hat der Catcher die möglichkeit ihn zu finden.
+Der Pfeil wird bei treffen auf einen Block außerdem als Wollblock dargestellt der ständig seine Farbe 
+ändert.
+Wenn der Catcher Rechtsklick auf den Block gemacht hat bekommt er einen Netherstern ins Inventar.
+Diesen muss er so schnell wie möglich in einen Trichter in der Mapmitte droppen.
+Wenn er dies schafft bevor der Runner einen neuen Checkpoint erreicht hat wird der Runner an den letzten
+Checkpoint zurückgeportet.
+
+Pro Checkpoint bekommt man einen Punkt.
+
+
+Sonstiges:
+
+Das Plugin sollte auf einem Spiggot 1.8 Server einwandfrei laufen.
+
+Es hat keine Abhängigkeit.
+
+
