@@ -1,9 +1,9 @@
 database:
   host: localhost
   port: 3306
-  database: ni163339_1_DB
-  user: ni163339_1_DB
-  password: b5UPua1m
+  database: database
+  user: user
+  password: password
 
 lobbySpawn:
   world: world
