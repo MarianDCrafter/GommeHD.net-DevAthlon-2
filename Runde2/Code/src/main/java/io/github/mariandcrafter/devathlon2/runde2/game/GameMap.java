@@ -21,6 +21,7 @@ public class GameMap {
     private List<Location> armorStandLocations;
     private List<Location> freeArmorStandLocations;
     private List<ArmorStand> armorStands = new ArrayList<ArmorStand>();
+    private RescueCapsule rescueCapsule;
 
     /**
      * Creates a new map
@@ -31,12 +32,13 @@ public class GameMap {
      * @param armorStandLocations
      */
     public GameMap(String name, String creator, Location catcherSpawn, List<Location> runnerSpawns,
-                   List<Location> armorStandLocations) {
+                   List<Location> armorStandLocations, RescueCapsule rescueCapsule) {
         this.name = name;
         this.creator = creator;
         this.catcherSpawn = catcherSpawn;
         this.runnerSpawns = runnerSpawns;
         this.armorStandLocations = armorStandLocations;
+        this.rescueCapsule = rescueCapsule;
     }
 
     /**
@@ -79,6 +81,13 @@ public class GameMap {
      */
     public List<ArmorStand> getArmorStands() {
         return armorStands;
+    }
+
+    /**
+     * @return the rescue capsule of the map
+     */
+    public RescueCapsule getRescueCapsule() {
+        return rescueCapsule;
     }
 
     /**

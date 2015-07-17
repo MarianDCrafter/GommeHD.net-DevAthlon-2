@@ -58,6 +58,12 @@ public class ArmorStandListener implements Listener {
                     break;
             }
             match.getGameMap().removeArmorStand(armorStand);
+
+            if (match.runnerHasCompleteArmor()) {
+                MessageUtils.success(player, "Du hast jetzt die komplette Astronautenrüstung! Begib dich schnell zur Rettungskapsel!");
+                MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die komplette Astronautenrüstung!");
+            }
+
         } else {
             // unlucky, the armor stand teleports itself to another location
             match.getGameMap().teleportArmorStand(armorStand, itemStack);

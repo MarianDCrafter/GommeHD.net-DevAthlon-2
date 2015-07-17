@@ -1,8 +1,11 @@
 package io.github.mariandcrafter.devathlon2.runde2;
 
+import io.github.mariandcrafter.devathlon2.runde2.game.Area;
 import io.github.mariandcrafter.devathlon2.runde2.game.GameMap;
+import io.github.mariandcrafter.devathlon2.runde2.game.RescueCapsule;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -64,7 +67,8 @@ public class Configuration {
                 configuration.getString(path + ".creator"),
                 loadLocationWithYawAndPitch(world, path + ".catcherSpawn"),
                 loadRunnerSpawns(world, path + ".runnerSpawns"),
-                loadArmorStands(world, path + ".armorStands")
+                loadArmorStands(world, path + ".armorStands"),
+                loadRescueCapsule(world, path + ".rescueCapsule")
         );
     }
 
@@ -93,9 +97,34 @@ public class Configuration {
     private List<Location> loadArmorStands(World world, String path) {
         List<Location> armorStands = new ArrayList<Location>();
         for (String armorStandPath : configuration.getConfigurationSection(path).getKeys(false)) {
-            armorStands.add(loadBlockLocation(world, path + "." + armorStandPath));
+            armorStands.add(loadLocation(world, path + "." + armorStandPath));
         }
         return armorStands;
+    }
+
+    private RescueCapsule loadRescueCapsule(World world, String path) {
+        return new RescueCapsule(
+                Material.getMaterial(configuration.getString(path + ".entranceMaterial")),
+                loadArea(world, path + ".entranceArea"),
+                Material.getMaterial(configuration.getString(path + ".exitMaterial")),
+                loadArea(world, path + ".exitArea"),
+                loadBlockLocation(world, path + ".rescueButtonLocation")
+        );
+    }
+
+    /**
+     * Loads a location with world, x, y, z, yaw and pitch.
+     *
+     * @param path the path to the location section
+     * @return the loaded location
+     */
+    private Location loadLocation(World world, String path) {
+        return new Location(
+                world,
+                configuration.getDouble(path + ".x"),
+                configuration.getDouble(path + ".y"),
+                configuration.getDouble(path + ".z")
+        );
     }
 
     /**
@@ -146,6 +175,20 @@ public class Configuration {
                 configuration.getDouble(path + ".x"),
                 configuration.getDouble(path + ".y"),
                 configuration.getDouble(path + ".z")
+        );
+    }
+
+    /**
+     * Loads an area with a start and an end location.
+     *
+     * @param world the world of the area
+     * @param path  the path to the area section
+     * @return the loaded area
+     */
+    private Area loadArea(World world, String path) {
+        return new Area(
+                loadBlockLocation(world, path + ".start"),
+                loadBlockLocation(world, path + ".end")
         );
     }
 

@@ -27,7 +27,7 @@ public class Main extends JavaPlugin {
         loadGameManager();
         loadListeners();
         loadCommands();
-        removeEntities();
+        setupWorlds();
 
         System.out.println("2. Devathlon, 2. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
@@ -67,6 +67,8 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ArmorStandListener(), this);
         Bukkit.getPluginManager().registerEvents(new HungerListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        // TODO Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ButtonClickListener(), this);
     }
 
     /**
@@ -82,11 +84,13 @@ public class Main extends JavaPlugin {
     }
 
     /**
-     * Sets difficulty to PEACEFUL and removes all entities in all maps.
+     * Removes all entites, sets the diffculty to PEACEFUL and disables the daylight cycle in all maps.
      */
-    public void removeEntities() {
+    public void setupWorlds() {
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.PEACEFUL);
+            world.setGameRuleValue("doDaylightCycle", "false");
+            world.setTime(18000L);
             for (Entity entity : world.getEntities()) {
                 if (!(entity instanceof Player))
                     entity.remove();

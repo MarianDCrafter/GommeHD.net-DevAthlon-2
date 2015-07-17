@@ -12,48 +12,61 @@ maps:
     creator: GreenGlowPixel
     world: world
     catcherSpawn:
-      x: -508.0
-      y: 64.0
-      z: -67.0
-      yaw: 90.0
+      x: -598.5
+      y: 248.0
+      z: -67.5
+      yaw: -90.0
       pitch: 0.0
     runnerSpawns:
       spawn1:
-        x: -508.0
-        y: 64.0
-        z: -67.0
-        yaw: 90.0
-        pitch: 0.0
-      spawn2:
-        x: -508.0
-        y: 64.0
-        z: -67.0
-        yaw: 90.0
-        pitch: 0.0
-      spawn3:
-        x: -508.0
-        y: 64.0
-        z: -67.0
-        yaw: 90.0
+        x: -516.5
+        y: 248.0
+        z: -31.5
+        yaw: -90.0
         pitch: 0.0
     armorStands:
       armorStand1:
-        x: -520
-        y: 69
-        z: -90
+        x: -541.0
+        y: 248.0
+        z: -56.0
       armorStand2:
-        x: -519
-        y: 69
-        z: -88
+        x: -541.0
+        y: 248.0
+        z: -50.0
       armorStand3:
-        x: -521
-        y: 69
-        z: -87
+        x: -541.0
+        y: 248.0
+        z: -44.0
       armorStand4:
-        x: -523
-        y: 69
-        z: -89
+        x: -541.0
+        y: 248.0
+        z: -38.0
       armorStand5:
-        x: -524
-        y: 69
-        z: -89
+        x: -541.0
+        y: 248.0
+        z: -32.0
+    rescueCapsule:
+      entranceMaterial: GLASS
+      entranceArea:
+        start:
+          x: -522
+          y: 250
+          z: -27
+        end:
+          x: -524
+          y: 248
+          z: -27
+      exitMaterial: QUARTZ_BLOCK
+      exitArea:
+        start:
+          x: -524
+          y: 247
+          z: -23
+        end:
+          x: -522
+          y: 247
+          z: -26
+      rescueButtonLocation:
+        x: -523
+        y: 248
+        z: -23
