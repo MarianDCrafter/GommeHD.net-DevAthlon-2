@@ -22,6 +22,10 @@ public class MoveListener implements Listener {
 
         Player player = event.getPlayer();
         for (Match match : Main.getGameManager().getMatches()) {
+
+            if(match.getRunnerPlayer() == player)
+                match.updateRunnerCompass();
+
             if ((match.getRunnerPlayer() == player || match.getCatcherPlayer() == player) &&
                     match.getGameMap().getMapVoid().getArea().containsBlockLocation(event.getTo()) &&
                     match.getTask() == null) {

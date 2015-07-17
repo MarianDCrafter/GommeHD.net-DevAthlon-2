@@ -3,16 +3,19 @@ package io.github.mariandcrafter.devathlon2.runde2.game;
 import io.github.mariandcrafter.devathlon2.runde2.Main;
 import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
 import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -23,6 +26,8 @@ public class Match {
     private GameMap gameMap;
     private UUID runner;
     private UUID catcher;
+
+    private Map<UUID, Long> pressurePlateStartTimes = new HashMap<UUID, Long>();
 
     private int time;
     private BukkitTask task;
@@ -77,6 +82,13 @@ public class Match {
     }
 
     /**
+     * @return the pressure plate start times
+     */
+    public Map<UUID, Long> getPressurePlateStartTimes() {
+        return pressurePlateStartTimes;
+    }
+
+    /**
      * @return the current task
      */
     public BukkitTask getTask() {
@@ -93,13 +105,10 @@ public class Match {
         gameMap.fillArmorStands();
         gameMap.getRescueCapsule().openEntrance();
         gameMap.getRescueCapsule().closeExit();
-    }
 
-    public void catcherKilledRunner() {
-        MessageUtils.success(getCatcherPlayer(), "Du hast den Runner gekillt und gewonnen!");
-        MessageUtils.info(getRunnerPlayer(), "Du wurdest vom Catcher gekillt und hast verloren!");
-
-        stop();
+        giveCatcherSword();
+        giveRunnerArmorCompass();
+        updateRunnerCompass();
     }
 
     /**
@@ -121,6 +130,16 @@ public class Match {
         // TODO send message
     }
 
+    public void catcherKilledRunner() {
+        MessageUtils.success(getCatcherPlayer(), "Du hast den Runner gekillt und gewonnen!");
+        MessageUtils.info(getRunnerPlayer(), "Du wurdest vom Catcher gekillt und hast verloren!");
+
+        stop();
+
+        getCatcherPlayer().playSound(getCatcherPlayer().getLocation(), Sound.LEVEL_UP, 10, 1);
+        getRunnerPlayer().playSound(getCatcherPlayer().getLocation(), Sound.CAT_MEOW, 10, 1);
+    }
+
     /**
      * Teleports the runner to a random runner spawn.
      */
@@ -129,6 +148,65 @@ public class Match {
         int index = Main.getRandom().nextInt(gameMap.getRunnerSpawns().size());
         Location location = gameMap.getRunnerSpawns().get(index);
         getRunnerPlayer().teleport(location);
+    }
+
+    /**
+     * Gives the catcher a gold sword.
+     */
+    public void giveCatcherSword() {
+        ItemStack itemStack = new ItemStack(Material.GOLD_SWORD);
+        itemStack.addEnchantment(Enchantment.DURABILITY, 3);
+        getCatcherPlayer().getInventory().addItem(itemStack);
+        getCatcherPlayer().updateInventory();
+    }
+
+    /**
+     * Gives the runner a compass which points to the nearest armor part.
+     */
+    public void giveRunnerArmorCompass() {
+        ItemStack itemStack = new ItemStack(Material.COMPASS);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "Nächstes Rüstungsteil");
+        itemStack.setItemMeta(meta);
+
+        getRunnerPlayer().getInventory().addItem(itemStack);
+        getRunnerPlayer().updateInventory();
+    }
+
+    /**
+     * Gives the runner a compass which points to the rescue capsule.
+     */
+    public void giveRunnerRescueCapsuleCompass() {
+        getRunnerPlayer().getInventory().clear();
+
+        ItemStack itemStack = new ItemStack(Material.COMPASS);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "Rettungskapsel");
+        itemStack.setItemMeta(meta);
+
+        getRunnerPlayer().getInventory().addItem(itemStack);
+        getRunnerPlayer().updateInventory();
+    }
+
+    public void updateRunnerCompass() {
+        Player runner = getRunnerPlayer();
+
+        if(!runnerHasCompleteArmor()) {
+            Location nearest = null;
+            double shortestDistance = Double.MAX_VALUE;
+            for (ArmorStand armorStand : gameMap.getArmorStands()) {
+                double distance = armorStand.getLocation().distance(runner.getLocation());
+                if (nearest == null || distance < shortestDistance) {
+                    nearest = armorStand.getLocation();
+                    shortestDistance = distance;
+                }
+            }
+            runner.setCompassTarget(nearest);
+        } else {
+            runner.setCompassTarget(gameMap.getRescueCapsule().getRescueButtonLocation());
+        }
     }
 
     /**

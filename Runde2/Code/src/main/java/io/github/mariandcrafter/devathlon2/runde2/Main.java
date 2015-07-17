@@ -70,6 +70,7 @@ public class Main extends JavaPlugin {
         // TODO Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new ButtonClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new MoveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PressurePlateListener(), this);
     }
 
     /**

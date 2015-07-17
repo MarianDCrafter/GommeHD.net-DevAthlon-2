@@ -1,8 +1,8 @@
 lobbySpawn:
   world: world
-  x: -508.0
-  y: 64.0
-  z: -67.0
+  x: -857.5
+  y: 242.0
+  z: -119.5
   yaw: 90.0
   pitch: 0.0
 
@@ -26,25 +26,53 @@ maps:
         pitch: 0.0
     armorStands:
       armorStand1:
-        x: -541.0
+        x: -559.5
         y: 248.0
-        z: -56.0
+        z: -50.5
       armorStand2:
-        x: -541.0
+        x: -559.5
         y: 248.0
-        z: -50.0
+        z: -31.5
       armorStand3:
-        x: -541.0
+        x: -555.5
         y: 248.0
-        z: -44.0
+        z: -29.5
       armorStand4:
-        x: -541.0
+        x: -564.5
         y: 248.0
-        z: -38.0
+        z: -67.5
       armorStand5:
-        x: -541.0
+        x: -551.5
         y: 248.0
-        z: -32.0
+        z: -44.5
+      armorStand6:
+        x: -553.5
+        y: 248.0
+        z: -62.5
+      armorStand7:
+        x: -543.5
+        y: 248.0
+        z: -55.5
+      armorStand8:
+        x: -541.5
+        y: 248.0
+        z: -62.5
+      armorStand9:
+        x: -541.5
+        y: 248.0
+        z: -44.5
+      armorStand10:
+        x: -529.5
+        y: 248.0
+        z: -32.5
+      armorStand11:
+        x: -523.5
+        y: 248.0
+        z: -56.5
+      armorStand12:
+        x: -528.5
+        y: 248.0
+        z: -68.5
     rescueCapsule:
       entranceMaterial: GLASS
       entranceArea:

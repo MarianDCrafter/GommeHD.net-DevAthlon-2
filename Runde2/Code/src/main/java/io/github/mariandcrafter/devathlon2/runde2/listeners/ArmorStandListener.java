@@ -63,11 +63,14 @@ public class ArmorStandListener implements Listener {
             if (match.runnerHasCompleteArmor()) {
                 MessageUtils.success(player, "Du hast jetzt die komplette Astronautenrüstung! Begib dich schnell zur Rettungskapsel!");
                 MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die komplette Astronautenrüstung!");
+                match.giveRunnerRescueCapsuleCompass();
             }
+            match.updateRunnerCompass();
 
         } else {
             // unlucky, the armor stand teleports itself to another location
             match.getGameMap().teleportArmorStand(armorStand, itemStack);
+            match.updateRunnerCompass();
             MessageUtils.error(player, "Leider hat sich der Armor Stand wegteleportiert.");
         }
     }
