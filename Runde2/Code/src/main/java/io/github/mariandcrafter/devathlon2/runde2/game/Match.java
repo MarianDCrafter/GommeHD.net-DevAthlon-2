@@ -100,7 +100,7 @@ public class Match {
      */
     public void start() {
         getCatcherPlayer().teleport(gameMap.getCatcherSpawn());
-        spawnRunner();
+        getRunnerPlayer().teleport(gameMap.getRunnerSpawn());
 
         gameMap.fillArmorStands();
         gameMap.getRescueCapsule().openEntrance();
@@ -143,16 +143,6 @@ public class Match {
 
         getCatcherPlayer().playSound(getCatcherPlayer().getLocation(), Sound.LEVEL_UP, 10, 1);
         getRunnerPlayer().playSound(getCatcherPlayer().getLocation(), Sound.CAT_MEOW, 10, 1);
-    }
-
-    /**
-     * Teleports the runner to a random runner spawn.
-     */
-    public void spawnRunner() {
-        // assuming the list contains at least one runner spawn:
-        int index = Main.getRandom().nextInt(gameMap.getRunnerSpawns().size());
-        Location location = gameMap.getRunnerSpawns().get(index);
-        getRunnerPlayer().teleport(location);
     }
 
     /**

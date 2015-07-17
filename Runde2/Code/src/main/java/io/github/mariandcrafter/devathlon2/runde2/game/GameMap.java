@@ -17,7 +17,7 @@ public class GameMap {
     private String name;
     private String creator;
     private Location catcherSpawn;
-    private List<Location> runnerSpawns;
+    private Location runnerSpawn;
     private List<Location> armorStandLocations;
     private List<Location> freeArmorStandLocations;
     private List<ArmorStand> armorStands = new ArrayList<ArmorStand>();
@@ -25,20 +25,12 @@ public class GameMap {
     private Void mapVoid;
     private List<Location> teleportationPoints;
 
-    /**
-     * Creates a new map
-     * @param name
-     * @param creator
-     * @param catcherSpawn
-     * @param runnerSpawns
-     * @param armorStandLocations
-     */
-    public GameMap(String name, String creator, Location catcherSpawn, List<Location> runnerSpawns,
+    public GameMap(String name, String creator, Location catcherSpawn, Location runnerSpawn,
                    List<Location> armorStandLocations, RescueCapsule rescueCapsule, Void mapVoid, List<Location> teleportationPoints) {
         this.name = name;
         this.creator = creator;
         this.catcherSpawn = catcherSpawn;
-        this.runnerSpawns = runnerSpawns;
+        this.runnerSpawn = runnerSpawn;
         this.armorStandLocations = armorStandLocations;
         this.rescueCapsule = rescueCapsule;
         this.mapVoid = mapVoid;
@@ -67,10 +59,10 @@ public class GameMap {
     }
 
     /**
-     * @return the runner spawn points of the map
+     * @return the runner spawn point of the map
      */
-    public List<Location> getRunnerSpawns() {
-        return runnerSpawns;
+    public Location getRunnerSpawn() {
+        return runnerSpawn;
     }
 
     /**

@@ -67,27 +67,12 @@ public class Configuration {
                 configuration.getString(path + ".name"),
                 configuration.getString(path + ".creator"),
                 loadLocationWithYawAndPitch(world, path + ".catcherSpawn"),
-                loadRunnerSpawns(world, path + ".runnerSpawns"),
+                loadLocationWithYawAndPitch(world, path + ".runnerSpawn"),
                 loadArmorStands(world, path + ".armorStands"),
                 loadRescueCapsule(world, path + ".rescueCapsule"),
                 loadVoid(world, path + ".void"),
                 loadTeleportationPoints(world, path + ".teleportationPoints")
         );
-    }
-
-    /**
-     * Loads all runner spawns of a map from the file.
-     *
-     * @param world the world of the map
-     * @param path  the path to the runner spawns section
-     * @return a list with all loaded runner spawns
-     */
-    private List<Location> loadRunnerSpawns(World world, String path) {
-        List<Location> runnerSpawns = new ArrayList<Location>();
-        for (String runnerSpawnsPath : configuration.getConfigurationSection(path).getKeys(false)) {
-            runnerSpawns.add(loadLocationWithYawAndPitch(world, path + "." + runnerSpawnsPath));
-        }
-        return runnerSpawns;
     }
 
     /**

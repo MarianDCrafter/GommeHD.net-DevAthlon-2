@@ -17,13 +17,12 @@ maps:
       z: -67.5
       yaw: -90.0
       pitch: 0.0
-    runnerSpawns:
-      spawn1:
-        x: -516.5
-        y: 248.0
-        z: -31.5
-        yaw: -90.0
-        pitch: 0.0
+    runnerSpawn:
+      x: -516.5
+      y: 248.0
+      z: -31.5
+      yaw: -90.0
+      pitch: 0.0
     armorStands:
       armorStand1:
         x: -558.5
