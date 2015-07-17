@@ -61,12 +61,26 @@ maps:
         start:
           x: -524
           y: 247
-          z: -23
+          z: -26
         end:
           x: -522
           y: 247
-          z: -26
+          z: -23
       rescueButtonLocation:
         x: -523
         y: 248
         z: -23
+    void:
+      area:
+        start:
+          x: -601
+          y: 245
+          z: -60
+        end:
+          x: -567
+          y: 255
+          z: -26
+      toLocation:
+        x: -607
+        y: 254
+        z: -22

@@ -25,6 +25,7 @@ public class ArmorStandListener implements Listener {
             for (Match match : Main.getGameManager().getMatches()) {
                 if (match.getRunnerPlayer() == player) {
                     runnerTakesItem(player, match, event.getArmorStandItem(), event.getRightClicked());
+                    break;
                 }
             }
         }

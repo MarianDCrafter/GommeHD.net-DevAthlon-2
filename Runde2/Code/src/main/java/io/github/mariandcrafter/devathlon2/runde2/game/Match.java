@@ -77,6 +77,13 @@ public class Match {
     }
 
     /**
+     * @return the current task
+     */
+    public BukkitTask getTask() {
+        return task;
+    }
+
+    /**
      * Starts a new round.
      */
     public void start() {
@@ -221,6 +228,30 @@ public class Match {
         MessageUtils.success(getCatcherPlayer(), "Der Runner ist in der Rettungskapsel wegen mangelnder Astronautenrüstung erstickt. Du hast gewonnen.");
 
         stop();
+    }
+
+    public void runnerFallingIntoVoid() {
+        task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                MessageUtils.error(getRunnerPlayer(), "Du bist aus dem Raumschiff gefallen und hast verloren.");
+                MessageUtils.error(getCatcherPlayer(), "Der Runner ist aus dem Raumschiff gefallen. Du hast gewonnen.");
+
+                stop();
+            }
+        }, 60L);
+    }
+
+    public void catcherFallingIntoVoid() {
+        task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                MessageUtils.error(getCatcherPlayer(), "Du bist aus dem Raumschiff gefallen und hast verloren.");
+                MessageUtils.error(getRunnerPlayer(), "Der Catcher ist aus dem Raumschiff gefallen. Du hast gewonnen.");
+
+                stop();
+            }
+        }, 60L);
     }
 
 }

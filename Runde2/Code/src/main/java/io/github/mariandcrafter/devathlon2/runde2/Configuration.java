@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde2;
 
 import io.github.mariandcrafter.devathlon2.runde2.game.Area;
+import io.github.mariandcrafter.devathlon2.runde2.game.Void;
 import io.github.mariandcrafter.devathlon2.runde2.game.GameMap;
 import io.github.mariandcrafter.devathlon2.runde2.game.RescueCapsule;
 import org.bukkit.Bukkit;
@@ -68,7 +69,8 @@ public class Configuration {
                 loadLocationWithYawAndPitch(world, path + ".catcherSpawn"),
                 loadRunnerSpawns(world, path + ".runnerSpawns"),
                 loadArmorStands(world, path + ".armorStands"),
-                loadRescueCapsule(world, path + ".rescueCapsule")
+                loadRescueCapsule(world, path + ".rescueCapsule"),
+                loadVoid(world, path + ".void")
         );
     }
 
@@ -109,6 +111,13 @@ public class Configuration {
                 Material.getMaterial(configuration.getString(path + ".exitMaterial")),
                 loadArea(world, path + ".exitArea"),
                 loadBlockLocation(world, path + ".rescueButtonLocation")
+        );
+    }
+
+    private Void loadVoid(World world, String path) {
+        return new Void(
+                loadArea(world, path + ".area"),
+                loadBlockLocation(world, path + ".toLocation")
         );
     }
 

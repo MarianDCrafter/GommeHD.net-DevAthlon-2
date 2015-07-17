@@ -27,6 +27,8 @@ public class ButtonClickListener implements Listener {
                     match.runnerUsedRescueCapsule();
                 else
                     match.runnerUsedRescueCapsuleWithoutFullArmor();
+
+                break;
             }
         }
     }

@@ -24,6 +24,8 @@ public class DamageListener implements Listener {
                 } else {
                     event.setCancelled(false);
                 }
+
+                break;
             }
         }
     }
