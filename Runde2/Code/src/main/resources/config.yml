@@ -1,0 +1,13 @@
+lobbySpawn:
+  world: world
+  x: -508
+  y: 64.0
+  z: -67.0
+  yaw: 90.0
+  pitch: 0.0
+
+maps:
+  map1:
+    name: Standard
+    creator: GreenGlowPixel
+    world: world

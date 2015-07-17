@@ -2,3 +2,15 @@ name: DevAthlon2Runde2
 version: 1.0-SNAPSHOT
 author: [MarianDCrafter, TobiArtz, Its_Enzo]
 main: io.github.mariandcrafter.devathlon2.runde2.Main
+
+commands:
+  invite:
+    usage: /invite [Spieler]
+    description: Lädt den angegebenen Spieler zu einem Kampf heraus
+  accept:
+    usage: /accept [Spieler]
+    description: Akzeptiert die Anfrage vom angegebenen Spieler. Dieser kann weggelassen werden, wenn man nur eine Anfrage hat.
+  deny:
+    usage: /deny [Spieler]
+    description: Lehnt die Anfrage vom angegebenen Spieler ab. Dieser kann weggelassen werden, wenn man nur eine Anfrage hat.
+  loc:
