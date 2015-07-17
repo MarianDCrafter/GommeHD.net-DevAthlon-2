@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde2.game;
 
 import io.github.mariandcrafter.devathlon2.runde2.Main;
+import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
 import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -80,12 +81,21 @@ public class Match {
         gameMap.fillArmorStands();
     }
 
+    public void catcherKilledRunner() {
+        MessageUtils.success(getCatcherPlayer(), "Du hast den Runner gekillt und gewonnen!");
+        MessageUtils.info(getRunnerPlayer(), "Du wurdest vom Catcher gekillt und hast verloren!");
+
+        stop();
+    }
+
     /**
      * Stops this round.
      */
     public void stop() {
         if (task != null)
             task.cancel();
+
+        Main.getGameManager().stopMatch(this);
     }
 
     /**
@@ -101,7 +111,7 @@ public class Match {
     /**
      * Teleports the runner to a random runner spawn.
      */
-    private void spawnRunner() {
+    public void spawnRunner() {
         // assuming the list contains at least one runner spawn:
         int index = Main.getRandom().nextInt(gameMap.getRunnerSpawns().size());
         Location location = gameMap.getRunnerSpawns().get(index);

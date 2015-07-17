@@ -103,6 +103,21 @@ public class GameManager {
     }
 
     /**
+     * Removes the given match and teleports the players to the lobby spawn.
+     *
+     * @param match the match to remove
+     */
+    public void stopMatch(Match match) {
+        matches.remove(match);
+
+        match.getCatcherPlayer().teleport(Main.getConfiguration().getSpawn());
+        match.getRunnerPlayer().teleport(Main.getConfiguration().getSpawn());
+
+        PlayerUtils.clear(match.getCatcherPlayer());
+        PlayerUtils.clear(match.getRunnerPlayer());
+    }
+
+    /**
      * @return a random and currently not used map or {@code null} if there is no free map
      */
     private GameMap getRandomFreeMap() {

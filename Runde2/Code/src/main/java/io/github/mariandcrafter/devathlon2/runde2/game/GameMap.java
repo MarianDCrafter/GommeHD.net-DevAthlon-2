@@ -1,5 +1,6 @@
 package io.github.mariandcrafter.devathlon2.runde2.game;
 
+import io.github.mariandcrafter.devathlon2.runde2.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -18,6 +19,7 @@ public class GameMap {
     private Location catcherSpawn;
     private List<Location> runnerSpawns;
     private List<Location> armorStandLocations;
+    private List<Location> freeArmorStandLocations;
     private List<ArmorStand> armorStands = new ArrayList<ArmorStand>();
 
     /**
@@ -73,9 +75,17 @@ public class GameMap {
     }
 
     /**
+     * @return the current used armor stands
+     */
+    public List<ArmorStand> getArmorStands() {
+        return armorStands;
+    }
+
+    /**
      * Puts the armor into the armor stands.
      */
     public void fillArmorStands() {
+        freeArmorStandLocations = new ArrayList<Location>(armorStandLocations);
 
         // remove current armor stands:
         for (ArmorStand armorStand : armorStands) {
@@ -84,10 +94,9 @@ public class GameMap {
         armorStands.clear();
 
         // spawn the armor stands:
-        armorStands.add(spawnArmorStand(armorStandLocations.get(0)));
-        armorStands.add(spawnArmorStand(armorStandLocations.get(1)));
-        armorStands.add(spawnArmorStand(armorStandLocations.get(2)));
-        armorStands.add(spawnArmorStand(armorStandLocations.get(3)));
+        for (int i = 0; i < 4; i++) {
+            armorStands.add(spawnArmorStand());
+        }
 
         // put the armor into the armor stands:
         armorStands.get(0).setHelmet(new ItemStack(Material.IRON_HELMET));
@@ -96,8 +105,47 @@ public class GameMap {
         armorStands.get(3).setBoots(new ItemStack(Material.IRON_BOOTS));
     }
 
-    private ArmorStand spawnArmorStand(Location location) {
+    private ArmorStand spawnArmorStand() {
+        Location location = freeArmorStandLocations.get(Main.getRandom().nextInt(freeArmorStandLocations.size()));
+        freeArmorStandLocations.remove(location);
         return location.getWorld().spawn(location, ArmorStand.class);
+    }
+
+    public void removeArmorStand(ArmorStand armorStand) {
+        freeArmorStandLocations.add(armorStand.getLocation());
+        armorStand.remove();
+        armorStands.remove(armorStand);
+    }
+
+    public void teleportArmorStand(ArmorStand armorStand, ItemStack itemStack) {
+
+        // remove the old armor stand:
+        Location oldLocation = armorStand.getLocation();
+        armorStand.remove();
+        armorStands.remove(armorStand);
+
+        // spawn a new armor stand:
+        armorStand = spawnArmorStand();
+        armorStands.add(armorStand);
+
+        switch (itemStack.getType()) {
+            case IRON_HELMET:
+                armorStand.setHelmet(itemStack);
+                break;
+            case IRON_CHESTPLATE:
+                armorStand.setChestplate(itemStack);
+                break;
+            case IRON_LEGGINGS:
+                armorStand.setLeggings(itemStack);
+                break;
+            case IRON_BOOTS:
+                armorStand.setBoots(itemStack);
+                break;
+        }
+
+        // insert the old location into the list with the free armor locations
+        freeArmorStandLocations.add(oldLocation);
+
     }
 
 }

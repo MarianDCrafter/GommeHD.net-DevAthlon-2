@@ -2,10 +2,7 @@ package io.github.mariandcrafter.devathlon2.runde2;
 
 import io.github.mariandcrafter.devathlon2.runde2.commands.StartGameCommands;
 import io.github.mariandcrafter.devathlon2.runde2.game.GameManager;
-import io.github.mariandcrafter.devathlon2.runde2.listeners.ArmorStandListener;
-import io.github.mariandcrafter.devathlon2.runde2.listeners.ItemDropListener;
-import io.github.mariandcrafter.devathlon2.runde2.listeners.JoinListener;
-import io.github.mariandcrafter.devathlon2.runde2.listeners.QuitListener;
+import io.github.mariandcrafter.devathlon2.runde2.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
@@ -68,6 +65,8 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
         Bukkit.getPluginManager().registerEvents(new ItemDropListener(), this);
         Bukkit.getPluginManager().registerEvents(new ArmorStandListener(), this);
+        Bukkit.getPluginManager().registerEvents(new HungerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
     }
 
     /**

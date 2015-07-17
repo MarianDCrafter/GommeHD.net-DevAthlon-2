@@ -37,19 +37,23 @@ maps:
         yaw: 90.0
         pitch: 0.0
     armorStands:
-      head:
+      armorStand1:
         x: -520
         y: 69
         z: -90
-      chest:
+      armorStand2:
         x: -519
         y: 69
         z: -88
-      legs:
+      armorStand3:
         x: -521
         y: 69
         z: -87
-      feet:
+      armorStand4:
         x: -523
+        y: 69
+        z: -89
+      armorStand5:
+        x: -524
         y: 69
         z: -89
