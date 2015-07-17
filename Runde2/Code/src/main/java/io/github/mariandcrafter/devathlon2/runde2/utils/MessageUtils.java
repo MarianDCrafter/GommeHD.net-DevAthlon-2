@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
  */
 public final class MessageUtils {
 
+    private static final String PREFIX = ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DevAthlon" + ChatColor.GRAY + "] ";
+
     /**
      * Sends the given player an error message
      *
@@ -15,7 +17,7 @@ public final class MessageUtils {
      * @param message the message to use
      */
     public static void error(Player player, String message) {
-        player.sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DevAthlon" + ChatColor.GRAY + "] " + ChatColor.RED + message);
+        player.sendMessage(PREFIX + ChatColor.RED + message);
     }
 
     /**
@@ -25,7 +27,17 @@ public final class MessageUtils {
      * @param message the message to use
      */
     public static void info(Player player, String message) {
-        player.sendMessage(ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DevAthlon" + ChatColor.GRAY + "] " + ChatColor.GOLD + message);
+        player.sendMessage(PREFIX + ChatColor.GOLD + message);
+    }
+
+    /**
+     * Sends the given player a success message
+     *
+     * @param player the player to send the message
+     * @param message the message to use
+     */
+    public static void success(Player player, String message) {
+        player.sendMessage(PREFIX + ChatColor.GREEN + message);
     }
 
 }
