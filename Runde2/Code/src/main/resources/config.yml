@@ -26,53 +26,53 @@ maps:
         pitch: 0.0
     armorStands:
       armorStand1:
-        x: -559.5
+        x: -558.5
         y: 248.0
-        z: -50.5
+        z: -49.5
       armorStand2:
-        x: -559.5
+        x: -558.5
         y: 248.0
-        z: -31.5
+        z: -30.5
       armorStand3:
-        x: -555.5
+        x: -554.5
         y: 248.0
-        z: -29.5
+        z: -28.5
       armorStand4:
-        x: -564.5
+        x: -563.5
         y: 248.0
-        z: -67.5
+        z: -66.5
       armorStand5:
-        x: -551.5
+        x: -550.5
         y: 248.0
-        z: -44.5
+        z: -43.5
       armorStand6:
-        x: -553.5
+        x: -552.5
         y: 248.0
-        z: -62.5
+        z: -61.5
       armorStand7:
-        x: -543.5
+        x: -542.5
         y: 248.0
-        z: -55.5
+        z: -54.5
       armorStand8:
-        x: -541.5
+        x: -540.5
         y: 248.0
-        z: -62.5
+        z: -61.5
       armorStand9:
-        x: -541.5
+        x: -540.5
         y: 248.0
-        z: -44.5
+        z: -43.5
       armorStand10:
-        x: -529.5
-        y: 248.0
-        z: -32.5
-      armorStand11:
-        x: -523.5
-        y: 248.0
-        z: -56.5
-      armorStand12:
         x: -528.5
         y: 248.0
-        z: -68.5
+        z: -31.5
+      armorStand11:
+        x: -522.5
+        y: 248.0
+        z: -55.5
+      armorStand12:
+        x: -527.5
+        y: 248.0
+        z: -67.5
     rescueCapsule:
       entranceMaterial: GLASS
       entranceArea:
@@ -112,3 +112,34 @@ maps:
         x: -607
         y: 254
         z: -22
+    teleportationPoints:
+      point1:
+        x: -555.5
+        y: 248.0
+        z: -56.5
+        yaw: 270.0
+        pitch: 0.0
+      point2:
+        x: -546.5
+        y: 248.0
+        z: -34.5
+        yaw: 90.0
+        pitch: 0.0
+      point3:
+        x: -533.5
+        y: 248.0
+        z: -68.5
+        yaw: 0.0
+        pitch: 0.0
+      point4:
+        x: -529.5
+        y: 248.0
+        z: -31.5
+        yaw: 270.0
+        pitch: 0.0
+      point5:
+        x: -514.5
+        y: 248.5
+        z: -48.5
+        yaw: 90.0
+        pitch: 0.0

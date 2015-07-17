@@ -23,6 +23,7 @@ public class GameMap {
     private List<ArmorStand> armorStands = new ArrayList<ArmorStand>();
     private RescueCapsule rescueCapsule;
     private Void mapVoid;
+    private List<Location> teleportationPoints;
 
     /**
      * Creates a new map
@@ -33,7 +34,7 @@ public class GameMap {
      * @param armorStandLocations
      */
     public GameMap(String name, String creator, Location catcherSpawn, List<Location> runnerSpawns,
-                   List<Location> armorStandLocations, RescueCapsule rescueCapsule, Void mapVoid) {
+                   List<Location> armorStandLocations, RescueCapsule rescueCapsule, Void mapVoid, List<Location> teleportationPoints) {
         this.name = name;
         this.creator = creator;
         this.catcherSpawn = catcherSpawn;
@@ -41,6 +42,7 @@ public class GameMap {
         this.armorStandLocations = armorStandLocations;
         this.rescueCapsule = rescueCapsule;
         this.mapVoid = mapVoid;
+        this.teleportationPoints = teleportationPoints;
     }
 
     /**
@@ -97,6 +99,13 @@ public class GameMap {
      */
     public Void getMapVoid() {
         return mapVoid;
+    }
+
+    /**
+     * @return the possible teleportation points of the map
+     */
+    public List<Location> getTeleportationPoints() {
+        return teleportationPoints;
     }
 
     /**

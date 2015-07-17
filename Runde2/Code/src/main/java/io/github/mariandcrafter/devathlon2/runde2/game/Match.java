@@ -109,6 +109,10 @@ public class Match {
         giveCatcherSword();
         giveRunnerArmorCompass();
         updateRunnerCompass();
+
+        MessageUtils.success(getRunnerPlayer(), "Du bist der Runner. Suche die 4 Rüstungsteile und gehe danach zur " +
+                "Rettungskapsel. Pass auf, dass du nicht vom Catcher gekillt wirst.");
+        MessageUtils.success(getCatcherPlayer(), "Du bist der Catcher. Finde den Runner und kill ihn, um zu gewinnen.");
     }
 
     /**
@@ -127,7 +131,8 @@ public class Match {
     public void playerLeft() {
         stop();
 
-        // TODO send message
+        MessageUtils.error(getCatcherPlayer(), "Dein Gegner hat das Spiel verlassen.");
+        MessageUtils.error(getRunnerPlayer(), "Dein Gegner hat das Spiel verlassen.");
     }
 
     public void catcherKilledRunner() {
@@ -228,7 +233,7 @@ public class Match {
         MessageUtils.success(getRunnerPlayer(), "Du hast die Rettungskapsel erfolgreich abgeschossen!");
         MessageUtils.error(getCatcherPlayer(), "Der Runner hat die Rettungskapsel abgeschossen!");
 
-        getRunnerPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
+        getRunnerPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 50));
         getRunnerPlayer().getLocation().getWorld().playSound(getRunnerPlayer().getLocation(), Sound.FIREWORK_LAUNCH, 50, 1);
         getRunnerPlayer().getLocation().getWorld().playEffect(getRunnerPlayer().getLocation(), Effect.EXPLOSION_HUGE, 20);
 
@@ -270,7 +275,7 @@ public class Match {
         MessageUtils.error(getRunnerPlayer(), "Du hast die Rettungskapsel abgeschossen, ohne die volle Astronautenrüstung anzuhaben!");
         MessageUtils.success(getCatcherPlayer(), "Der Runner hat die Rettungskapsel abgeschossen, ohne die volle Astronautenrüstung anzuhaben.");
 
-        getRunnerPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+        getRunnerPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 50));
         getRunnerPlayer().getLocation().getWorld().playSound(getRunnerPlayer().getLocation(), Sound.FIREWORK_LAUNCH, 50, 1);
         getRunnerPlayer().getLocation().getWorld().playEffect(getRunnerPlayer().getLocation(), Effect.EXPLOSION_HUGE, 20);
 

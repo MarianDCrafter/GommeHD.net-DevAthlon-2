@@ -71,6 +71,8 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ButtonClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new MoveListener(), this);
         Bukkit.getPluginManager().registerEvents(new PressurePlateListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RegenerationListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GrenadeListener(), this);
     }
 
     /**

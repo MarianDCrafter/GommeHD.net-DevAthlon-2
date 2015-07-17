@@ -70,7 +70,8 @@ public class Configuration {
                 loadRunnerSpawns(world, path + ".runnerSpawns"),
                 loadArmorStands(world, path + ".armorStands"),
                 loadRescueCapsule(world, path + ".rescueCapsule"),
-                loadVoid(world, path + ".void")
+                loadVoid(world, path + ".void"),
+                loadTeleportationPoints(world, path + ".teleportationPoints")
         );
     }
 
@@ -104,6 +105,13 @@ public class Configuration {
         return armorStands;
     }
 
+    /**
+     * Loads the rescue capsule of a map from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the rescue capsule section
+     * @return the loaded rescue capsule
+     */
     private RescueCapsule loadRescueCapsule(World world, String path) {
         return new RescueCapsule(
                 Material.getMaterial(configuration.getString(path + ".entranceMaterial")),
@@ -114,11 +122,33 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads the void of a map from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the void section
+     * @return the loaded void
+     */
     private Void loadVoid(World world, String path) {
         return new Void(
                 loadArea(world, path + ".area"),
                 loadBlockLocation(world, path + ".toLocation")
         );
+    }
+
+    /**
+     * Loads the teleportation points of a map from the file.
+     *
+     * @param world the world of the map
+     * @param path  the path to the teleportation points section
+     * @return a list with all loaded teleportation points
+     */
+    private List<Location> loadTeleportationPoints(World world, String path) {
+        List<Location> teleportationPoints = new ArrayList<Location>();
+        for (String teleportationPointPath : configuration.getConfigurationSection(path).getKeys(false)) {
+            teleportationPoints.add(loadLocationWithYawAndPitch(world, path + "." + teleportationPointPath));
+        }
+        return teleportationPoints;
     }
 
     /**
