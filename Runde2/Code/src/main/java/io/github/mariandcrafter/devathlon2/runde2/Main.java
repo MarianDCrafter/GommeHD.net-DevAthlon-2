@@ -2,6 +2,10 @@ package io.github.mariandcrafter.devathlon2.runde2;
 
 import io.github.mariandcrafter.devathlon2.runde2.commands.StartGameCommands;
 import io.github.mariandcrafter.devathlon2.runde2.game.GameManager;
+import io.github.mariandcrafter.devathlon2.runde2.listeners.ArmorStandListener;
+import io.github.mariandcrafter.devathlon2.runde2.listeners.ItemDropListener;
+import io.github.mariandcrafter.devathlon2.runde2.listeners.JoinListener;
+import io.github.mariandcrafter.devathlon2.runde2.listeners.QuitListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.World;
@@ -9,11 +13,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Random;
+
 public class Main extends JavaPlugin {
 
     private static Main instance;
     private static Configuration configuration;
     private static GameManager gameManager;
+    private static Random random = new Random();
 
     @Override
     public void onEnable() {
@@ -57,7 +64,10 @@ public class Main extends JavaPlugin {
      * Registers every Listener.
      */
     public void loadListeners() {
-
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ItemDropListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ArmorStandListener(), this);
     }
 
     /**
@@ -106,4 +116,10 @@ public class Main extends JavaPlugin {
         return gameManager;
     }
 
+    /**
+     * @return the Random instance used by the whole plugin
+     */
+    public static Random getRandom() {
+        return random;
+    }
 }

@@ -1,6 +1,6 @@
 lobbySpawn:
   world: world
-  x: -508
+  x: -508.0
   y: 64.0
   z: -67.0
   yaw: 90.0
@@ -11,3 +11,45 @@ maps:
     name: Standard
     creator: GreenGlowPixel
     world: world
+    catcherSpawn:
+      x: -508.0
+      y: 64.0
+      z: -67.0
+      yaw: 90.0
+      pitch: 0.0
+    runnerSpawns:
+      spawn1:
+        x: -508.0
+        y: 64.0
+        z: -67.0
+        yaw: 90.0
+        pitch: 0.0
+      spawn2:
+        x: -508.0
+        y: 64.0
+        z: -67.0
+        yaw: 90.0
+        pitch: 0.0
+      spawn3:
+        x: -508.0
+        y: 64.0
+        z: -67.0
+        yaw: 90.0
+        pitch: 0.0
+    armorStands:
+      head:
+        x: -520
+        y: 69
+        z: -90
+      chest:
+        x: -519
+        y: 69
+        z: -88
+      legs:
+        x: -521
+        y: 69
+        z: -87
+      feet:
+        x: -523
+        y: 69
+        z: -89
