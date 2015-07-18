@@ -21,22 +21,27 @@ public class MoveListener implements Listener {
         // check whether he moved to another block
 
         Player player = event.getPlayer();
-        for (Match match : Main.getGameManager().getMatches()) {
+        Match match = Main.getGameManager().getMatch(player);
+
+        if (match == null) return;
+
+        if (match.getPhase() == Match.Phase.STARTING) {
+            player.teleport(event.getFrom());
+            return;
+        }
+
+        if (match.getRunnerPlayer() == player)
+            match.updateRunnerCompass();
+
+        if ((match.getRunnerPlayer() == player || match.getCatcherPlayer() == player) &&
+                match.getGameMap().getMapVoid().getArea().containsBlockLocation(event.getTo()) &&
+                match.getPhase() == Match.Phase.RUNNING) {
+            velocityPlayerToLocation(player, match.getGameMap().getMapVoid().getToLocation());
 
             if(match.getRunnerPlayer() == player)
-                match.updateRunnerCompass();
-
-            if ((match.getRunnerPlayer() == player || match.getCatcherPlayer() == player) &&
-                    match.getGameMap().getMapVoid().getArea().containsBlockLocation(event.getTo()) &&
-                    match.getTask() == null) {
-                velocityPlayerToLocation(player, match.getGameMap().getMapVoid().getToLocation());
-
-                if(match.getRunnerPlayer() == player) {
-                    match.runnerFallingIntoVoid();
-                } else {
-                    match.catcherFallingIntoVoid();
-                }
-            }
+                match.runnerFallingIntoVoid();
+            else
+                match.catcherFallingIntoVoid();
         }
     }
 

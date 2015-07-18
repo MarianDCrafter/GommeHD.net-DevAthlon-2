@@ -115,9 +115,6 @@ public class StartGameCommands implements CommandExecutor {
             return;
         }
 
-        MessageUtils.info(player, "Du hast die Einladung von " + inviter.getName() + " angenommen.");
-        MessageUtils.info(inviter, player.getName() + " hat deine Einladung angenommen.");
-
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
     }
 

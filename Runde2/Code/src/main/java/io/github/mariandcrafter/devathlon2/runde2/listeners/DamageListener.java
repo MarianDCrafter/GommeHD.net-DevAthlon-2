@@ -14,20 +14,17 @@ public class DamageListener implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
 
-        Player player = (Player) event.getEntity();
-
         event.setCancelled(true);
-        for (Match match : Main.getGameManager().getMatches()) {
-            if (match.getRunnerPlayer() == player) {
-                if (player.getHealth() - event.getDamage() <= 0) {
-                    match.catcherKilledRunner();
-                } else {
-                    event.setCancelled(false);
-                }
 
-                break;
-            }
-        }
+        Player player = (Player) event.getEntity();
+        Match match = Main.getGameManager().getMatch(player);
+
+        if (match == null || match.getRunnerPlayer() != player || match.getPhase() != Match.Phase.RUNNING) return;
+
+        if (player.getHealth() - event.getDamage() <= 0)
+            match.catcherKilledRunner();
+        else
+            event.setCancelled(false);
     }
 
 }

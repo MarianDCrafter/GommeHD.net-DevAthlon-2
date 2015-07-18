@@ -27,16 +27,16 @@ public class GrenadeListener implements Listener {
         Player player = (Player) snowball.getShooter();
         Match match = Main.getGameManager().getMatch(player);
 
-        if (match != null) {
-            suplyBlindessIfHit(match.getRunnerPlayer(), snowball);
-            suplyBlindessIfHit(match.getCatcherPlayer(), snowball);
+        if (match == null || match.getPhase() != Match.Phase.RUNNING) return;
 
-            snowball.getLocation().getWorld().playEffect(snowball.getLocation(), Effect.SPLASH, 20);
-            snowball.getLocation().getWorld().playSound(snowball.getLocation(), Sound.SPLASH, 10, 1);
-        }
+        supplyBlindessIfHit(match.getRunnerPlayer(), snowball);
+        supplyBlindessIfHit(match.getCatcherPlayer(), snowball);
+
+        snowball.getLocation().getWorld().playEffect(snowball.getLocation(), Effect.SPLASH, 20);
+        snowball.getLocation().getWorld().playSound(snowball.getLocation(), Sound.SPLASH, 10, 1);
     }
 
-    private void suplyBlindessIfHit(Player player, Snowball snowball) {
+    private void supplyBlindessIfHit(Player player, Snowball snowball) {
         if (snowball.getLocation().distance(player.getLocation()) <= 3) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 50));
             MessageUtils.error(player, "Du wurdest von einer Blindheits-Granate getroffen und bist jetzt für 10 Sekunden blind!");

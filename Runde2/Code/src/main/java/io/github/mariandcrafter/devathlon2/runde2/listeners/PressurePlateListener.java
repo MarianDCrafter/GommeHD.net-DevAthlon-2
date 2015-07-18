@@ -29,6 +29,8 @@ public class PressurePlateListener implements Listener {
         Player player = event.getPlayer();
         Match match = Main.getGameManager().getMatch(player);
 
+        if (match == null || match.getPhase() != Match.Phase.RUNNING) return;
+
         Long currentPressurePlateTime = match.getPressurePlateStartTimes().get(player.getUniqueId());
         if (currentPressurePlateTime != null && System.currentTimeMillis() - currentPressurePlateTime < 60000) {
             MessageUtils.error(player, "Du kannst erst wieder in " + ((60000 - (System.currentTimeMillis() - currentPressurePlateTime)) / 1000) + " Sekunden eine Druckplatte verwenden.");

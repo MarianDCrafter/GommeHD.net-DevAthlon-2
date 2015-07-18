@@ -22,11 +22,10 @@ public class ArmorStandListener implements Listener {
             // The documentation says that the item stacks are null if not used, but I found out that the types are AIR.
 
             Player player = event.getPlayer();
-            for (Match match : Main.getGameManager().getMatches()) {
-                if (match.getRunnerPlayer() == player) {
-                    runnerTakesItem(player, match, event.getArmorStandItem(), event.getRightClicked());
-                    break;
-                }
+            Match match = Main.getGameManager().getMatch(player);
+
+            if (match != null && match.getRunnerPlayer() == player && match.getPhase() == Match.Phase.RUNNING) {
+                runnerTakesItem(player, match, event.getArmorStandItem(), event.getRightClicked());
             }
         }
         event.setCancelled(true);

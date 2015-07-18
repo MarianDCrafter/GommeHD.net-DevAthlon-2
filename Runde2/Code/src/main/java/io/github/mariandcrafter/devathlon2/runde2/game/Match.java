@@ -23,10 +23,15 @@ import java.util.UUID;
  */
 public class Match {
 
+    public enum Phase {
+        STARTING, RUNNING, RESCUE_CAPSULE, VOID
+    }
+
     private GameMap gameMap;
     private UUID runner;
     private UUID catcher;
 
+    private Phase phase;
     private Map<UUID, Long> pressurePlateStartTimes = new HashMap<UUID, Long>();
 
     private int time;
@@ -81,6 +86,10 @@ public class Match {
         return Bukkit.getPlayer(catcher);
     }
 
+    public Phase getPhase() {
+        return phase;
+    }
+
     /**
      * @return the pressure plate start times
      */
@@ -109,6 +118,50 @@ public class Match {
         giveCatcherSword();
         giveRunnerArmorCompass();
         updateRunnerCompass();
+
+        sendStartMessages();
+
+        phase = Phase.STARTING;
+
+        time = 11;
+        task = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                time--;
+
+                Player runner = getRunnerPlayer();
+                Player catcher = getCatcherPlayer();
+                runner.playSound(runner.getLocation(), Sound.NOTE_PIANO, 10, 1);
+                catcher.playSound(catcher.getLocation(), Sound.NOTE_PIANO, 10, 1);
+
+                if (time <= 0) {
+                    task.cancel();
+                    task = null;
+                    phase = Phase.RUNNING;
+
+                    String message = "Das Spiel startet jetzt!";
+                    MessageUtils.info(runner, message);
+                    MessageUtils.info(catcher, message);
+
+                } else if (time == 10 || time <= 5) {
+                    String message = "Das Spiel startet in " + time + " Sekunden.";
+                    MessageUtils.info(runner, message);
+                    MessageUtils.info(catcher, message);
+                }
+            }
+        }, 20L, 20L);
+    }
+
+    private void sendStartMessages() {
+        getRunnerPlayer().sendMessage("");
+        getCatcherPlayer().sendMessage("");
+
+        String map = "Du spielst auf der Map " + gameMap.getName() + " von " + gameMap.getCreator();
+        MessageUtils.info(getRunnerPlayer(), map);
+        MessageUtils.info(getCatcherPlayer(), map);
+
+        MessageUtils.info(getRunnerPlayer(), "Dein Gegner ist " + getCatcherPlayer().getName());
+        MessageUtils.info(getCatcherPlayer(), "Dein Gegner ist " + getRunnerPlayer().getName());
 
         MessageUtils.success(getRunnerPlayer(), "Du bist der Runner. Suche die 4 Rüstungsteile und gehe danach zur " +
                 "Rettungskapsel. Pass auf, dass du nicht vom Catcher gekillt wirst.");
@@ -185,6 +238,10 @@ public class Match {
         getRunnerPlayer().updateInventory();
     }
 
+    /**
+     * Updates the compass target location of the runner. If the runner has collected all armor parts, the compass
+     * points to the rescue capsule, otherwise to the nearest armor stand.
+     */
     public void updateRunnerCompass() {
         Player runner = getRunnerPlayer();
 
@@ -217,6 +274,8 @@ public class Match {
      * Called when the runner uses the rescue capsule while he is wearing the whole armor.
      */
     public void runnerUsedRescueCapsule() {
+        phase = Phase.RESCUE_CAPSULE;
+
         gameMap.getRescueCapsule().closeEntrance();
         gameMap.getRescueCapsule().openExit();
 
@@ -259,6 +318,8 @@ public class Match {
     }
 
     public void runnerUsedRescueCapsuleWithoutFullArmor() {
+        phase = Phase.RESCUE_CAPSULE;
+
         gameMap.getRescueCapsule().closeEntrance();
         gameMap.getRescueCapsule().openExit();
 
@@ -304,11 +365,13 @@ public class Match {
     }
 
     public void runnerFallingIntoVoid() {
+        phase = Phase.VOID;
+
         task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
             @Override
             public void run() {
                 MessageUtils.error(getRunnerPlayer(), "Du bist aus dem Raumschiff gefallen und hast verloren.");
-                MessageUtils.error(getCatcherPlayer(), "Der Runner ist aus dem Raumschiff gefallen. Du hast gewonnen.");
+                MessageUtils.success(getCatcherPlayer(), "Der Runner ist aus dem Raumschiff gefallen. Du hast gewonnen.");
 
                 stop();
             }
@@ -316,11 +379,13 @@ public class Match {
     }
 
     public void catcherFallingIntoVoid() {
+        phase = Phase.VOID;
+
         task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
             @Override
             public void run() {
                 MessageUtils.error(getCatcherPlayer(), "Du bist aus dem Raumschiff gefallen und hast verloren.");
-                MessageUtils.error(getRunnerPlayer(), "Der Catcher ist aus dem Raumschiff gefallen. Du hast gewonnen.");
+                MessageUtils.success(getRunnerPlayer(), "Der Catcher ist aus dem Raumschiff gefallen. Du hast gewonnen.");
 
                 stop();
             }

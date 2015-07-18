@@ -1,8 +1,9 @@
 package io.github.mariandcrafter.devathlon2.runde2.game;
 
 import io.github.mariandcrafter.devathlon2.runde2.Main;
+import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
 import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
-import org.bukkit.GameMode;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -26,9 +27,13 @@ public class GameManager {
      * @param player the player who joined the server
      */
     public void onJoin(Player player) {
-        player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Main.getConfiguration().getSpawn());
         PlayerUtils.clear(player);
+
+        MessageUtils.success(player, "Willkommen in der Zukunft!");
+        MessageUtils.info(player, "Fordere mit /invite jemanden heraus.");
+        MessageUtils.info(player, "Nimm mit /accept eine Einladung an.");
+        MessageUtils.success(player, ChatColor.BOLD + "Viel Spaß!");
     }
 
     /**

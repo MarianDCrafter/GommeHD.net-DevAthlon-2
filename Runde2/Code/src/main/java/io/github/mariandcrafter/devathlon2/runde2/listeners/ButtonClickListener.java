@@ -19,18 +19,16 @@ public class ButtonClickListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        for (Match match : Main.getGameManager().getMatches()) {
-            if (match.getRunnerPlayer() == player &&
-                    match.getGameMap().getRescueCapsule().getRescueButtonLocation().equals(event.getClickedBlock().getLocation())) {
+        Match match = Main.getGameManager().getMatch(player);
 
-                if (match.runnerHasCompleteArmor())
-                    match.runnerUsedRescueCapsule();
-                else
-                    match.runnerUsedRescueCapsuleWithoutFullArmor();
+        if (match == null || match.getRunnerPlayer() != player || match.getPhase() != Match.Phase.RUNNING ||
+                !match.getGameMap().getRescueCapsule().getRescueButtonLocation().equals(event.getClickedBlock().getLocation()))
+            return;
 
-                break;
-            }
-        }
+        if (match.runnerHasCompleteArmor())
+            match.runnerUsedRescueCapsule();
+        else
+            match.runnerUsedRescueCapsuleWithoutFullArmor();
     }
 
 }
