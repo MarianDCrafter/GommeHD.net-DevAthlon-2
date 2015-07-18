@@ -1,0 +1,37 @@
+Das Plugin ist ausführbar auf einem Spigot 1.8-Server. Es werden keine Datenbank oder andere Plugins benötigt.
+Eine Map ist bereits vorinstalliert. Weitere Maps können hinzugefügt werden, indem sie in der config.yml eingetragen werden. Wie das funktioniert, kann von der ersten Map abgeguckt werden.
+Der Spawn ist ebenfalls in der config.yml eingetragen und kann verändert werden.
+Die Map, die im Ordner enthalten ist, muss unbedingt verwendet werden!
+
+=====================================
+
+Es spielen immer zwei Spieler in einer Map. Das Matchup-System ist dasselbe wie in der ersten Runde:
+/invite [Spieler] - Lädt den angegebenen Spieler zu einem Match ein.
+/accept - Nimmt eine Anfrage an. Wenn man mehrere Anfragen bekommen hat, muss zusätzlich ein Spieler angegebenen werden.
+/deny - Lehnt eine Anfrage ab. Wenn man mehrere Anfragen bekommen hat, muss zusätzlich ein Spieler angegeben werden.
+
+Sobald das Spiel startet, bekommt jeder Spieler eine Rolle zugewiesen. Einer ist Runner, der andere ist Catcher.
+
+Geschichte: Es spielt alles in der Zukunft. Der Runner ist mit seinem Raumschiff geflogen. Der Catcher hat sein Raumschiff zerstört, da er ihn töten möchte. Der Runner versucht nun, seinen kompletten Raumanzug zu sammeln und mit der Rettungskapsel davonzufliegen. Das Ziel des Catchers ist es, den Runner zu killen.
+
+
+Funktionsweise:
+
+Der Runner läuft durch das Raumschiff. Sein Kompass zeigt immer auf das naheste Rüstungsteil. Wenn er eines gefunden hat, klickt er mit der rechten Maustaste darauf. Mit einer Wahrscheinlichkeit von 75% bekommt er das Item, in den anderen 25% wird das Rüstungsteil woandershin teleportiert.
+Hat er alle vier Rüstungsteile (seinen gesamten Raumanzug), läuft er zur Rettungskapsel, wo jetzt sein Kompass hinzeigt. Verwendet er die Rettungskapsel, indem er auf den Knopf in ihr drückt, startet sie und er ist gerettet.
+Außerdem bekommt der Runner einen Rückstoßstab, um den Catcher schlagen zu können. Es gibt keine natürliche Regeneration.
+HINWEIS: Der Runner kann auch die Rettungskapsel verwenden, wenn er noch nicht die komplette Rüstung hat. Dies ist jedoch nicht zu empfehlen, da die Rettungskapsel undicht ist und er so erstickt.
+
+Der Catcher versucht einfach den Runner zu killen. Gelingt ihm das, hat er gewonnen. Dafür bekommt er ein verzauberten Goldschwert. Klickt der Catcher auf ein Rüstungsteil, dann teleportiert sich dieses weg. Der Catcher kann keinen Schaden, aber Rückstoß bekommen.
+
+Außerdem gibt es besondere Druckplatten, die auf der Map verteilt sind, mit denen man Effekte und andere nützliche Sachen bekommt. Sie sind alle 60 Sekunden ausführbar.
+- Golddruckplatte: Speed II für 10 Sekunden
+- Holzdruckplatte: Wird eine Holzdruckplatte vom Catcher benutzt, so bekommt er 15 Sekunden Übelkeit II. Wird sie vom Runner benutzt, so bekommt er mit einer Wahrscheinlichkeit von 50% 5 Sekunden Regeneration II, in den anderen 50% wie der Catcher für 15 Sekunden Übelkeit II.
+- Steindruckplatte: Teleportiert den Spieler an eine zufällige Position.
+- Eisendruckplatte: Gibt dem Spieler eine Blindheias-Granate. Wenn diese aufkommt, bekommen alle Spieler (auch der Werfer) im Radius von 3 Blöcken Blindheit für 10 Sekunden.
+
+
+Weitere Tipps:
+- Gehe niemals zu weit an den Rand des Loches vom Raumschiff! Du könntest sonst rausgezogen werden. (Jaja, ihr könnt es mal ausprobieren ;))
+- Wenn du der Runner bist und der Catcher ein Rüstungsteil bewacht, könntest du ihn mit einer Blindheits-Granate austricksen, um an das Rüstungsteil zu gelangen. Du kannst natürlich auch den Rückstoßstab verwenden, um zum Beispiel den Catcher aus dem Raumschiff zu schubsen.
+- Als Runner ist es manchmal günstig, sich einfach vor dem Catcher zu verstecken, um nicht entdeckt zu werden. Denn Kämpfe gehen meistens nur für den Catcher gut aus.
