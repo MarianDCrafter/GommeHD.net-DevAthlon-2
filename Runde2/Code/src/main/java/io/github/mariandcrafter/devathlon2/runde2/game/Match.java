@@ -159,6 +159,7 @@ public class Match {
 
         // Give the players their items:
         giveCatcherSword();
+        giveRunnerKnockbackStick();
         giveRunnerArmorCompass();
         updateRunnerCompass();
 
@@ -254,6 +255,16 @@ public class Match {
         itemStack.addEnchantment(Enchantment.DURABILITY, 3);
         getCatcherPlayer().getInventory().addItem(itemStack);
         getCatcherPlayer().updateInventory();
+    }
+
+    /**
+     * Gives the runner a knockback stick.
+     */
+    public void giveRunnerKnockbackStick() {
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        itemStack.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+        getRunnerPlayer().getInventory().addItem(itemStack);
+        getRunnerPlayer().updateInventory();
     }
 
     /**

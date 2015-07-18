@@ -12,6 +12,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
 
+/**
+ * The main class of the DevAthlon plugin.
+ * @author MarianDCrafter
+ */
 public class Main extends JavaPlugin {
 
     private static Main instance;
@@ -19,6 +23,9 @@ public class Main extends JavaPlugin {
     private static GameManager gameManager;
     private static Random random = new Random();
 
+    /**
+     * Called when the plugin is enabled. Sets up everything including listeners, commands etc.
+     */
     @Override
     public void onEnable() {
         instance = this;
@@ -32,6 +39,9 @@ public class Main extends JavaPlugin {
         System.out.println("2. Devathlon, 2. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
 
+    /**
+     * Called when the plugin is disabled.
+     */
     @Override
     public void onDisable() {
         System.out.println("2. Devathlon, 1. Runde - GreenGlowPixel-Team - Plugin disabled!");
@@ -67,7 +77,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ArmorStandListener(), this);
         Bukkit.getPluginManager().registerEvents(new HungerListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
-        // TODO Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new RescueCapsuleStartListener(), this);
         Bukkit.getPluginManager().registerEvents(new MoveListener(), this);
         Bukkit.getPluginManager().registerEvents(new PressurePlateListener(), this);
@@ -84,7 +94,6 @@ public class Main extends JavaPlugin {
         getCommand("invite").setExecutor(startGameCommands);
         getCommand("accept").setExecutor(startGameCommands);
         getCommand("deny").setExecutor(startGameCommands);
-        getCommand("loc").setExecutor(startGameCommands); // TODO remove!
     }
 
     /**

@@ -3,7 +3,6 @@ package io.github.mariandcrafter.devathlon2.runde2.commands;
 import io.github.mariandcrafter.devathlon2.runde2.Main;
 import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,11 +38,6 @@ public class StartGameCommands implements CommandExecutor {
             deny(player, args);
             return true;
 
-        } else if (command.getName().equals("loc")) { // TODO remove!
-            Location loc = player.getLocation();
-            sender.sendMessage(loc.getX() + " " + loc.getY() + " " + loc.getZ() + " " + loc.getYaw() + " " + loc.getPitch());
-            return true;
-
         } else {
             return false;
         }
@@ -66,6 +60,10 @@ public class StartGameCommands implements CommandExecutor {
         }
 
         Player invitedPlayer = Bukkit.getPlayer(args[0]);
+        if (player == invitedPlayer) {
+            MessageUtils.error("Du kannst dich nicht selbst einladen.", player);
+            return;
+        }
         if (invitedPlayer == null) {
             MessageUtils.error("Der Spieler " + args[0] + " ist nicht online.", player);
             return;

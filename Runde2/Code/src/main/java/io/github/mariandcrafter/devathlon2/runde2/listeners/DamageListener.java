@@ -25,12 +25,18 @@ public class DamageListener implements Listener {
         Player player = (Player) event.getEntity();
         Match match = Main.getGameManager().getMatch(player);
 
-        if (match == null || match.getRunnerPlayer() != player || match.getPhase() != Match.Phase.RUNNING) return;
+        if (match == null || match.getPhase() != Match.Phase.RUNNING) return;
 
-        if (player.getHealth() - event.getDamage() <= 0)
-            match.catcherKilledRunner(); // Runner has no more lifes and is dead
-        else
-            event.setCancelled(false); // Runner has lifes, but he should get damage
+        if (match.getRunnerPlayer() == player) {
+            if (player.getHealth() - event.getDamage() <= 0)
+                match.catcherKilledRunner(); // Runner has no more lifes and is dead
+            else
+                event.setCancelled(false); // Runner has lifes, but he should get damage
+        } else {
+            // Set damage of catcher to 0:
+            event.setDamage(0);
+            event.setCancelled(false);
+        }
     }
 
 }
