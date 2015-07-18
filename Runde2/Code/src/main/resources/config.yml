@@ -102,9 +102,9 @@ maps:
         start:
           x: -601
           y: 245
-          z: -60
+          z: -61
         end:
-          x: -567
+          x: -566
           y: 255
           z: -26
       toLocation:

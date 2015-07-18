@@ -16,11 +16,18 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
+/**
+ * Used to check whether a player is staying on a pressure plate to give him effects or other things.
+ */
 public class PressurePlateListener implements Listener {
 
+    /**
+     * Executed when a player interacts.
+     */
     @SuppressWarnings("unused")
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        // The action of a pressure plate is PHYSICAL:
         if (event.getAction() != Action.PHYSICAL || event.getClickedBlock() == null ||
                 !Main.getGameManager().isPlaying(event.getPlayer())) return;
 
@@ -29,49 +36,86 @@ public class PressurePlateListener implements Listener {
 
         if (match == null || match.getPhase() != Match.Phase.RUNNING) return;
 
-        Long currentPressurePlateTime = match.getPressurePlateStartTimes().get(player.getUniqueId());
+        // Calculate whether he is able to use again a pressure plate (every 60 seconds):
+        Long currentPressurePlateTime = match.getPressurePlateUseTimes().get(player.getUniqueId());
+
         if (currentPressurePlateTime != null && System.currentTimeMillis() - currentPressurePlateTime < 60000) {
+            // The formular for the rest of the waiting time is (60000 - (currentTime - currentPressurePlateTime)) / 1000:
             MessageUtils.error("Du kannst erst wieder in " + ((60000 - (System.currentTimeMillis() - currentPressurePlateTime)) / 1000) + " Sekunden eine Druckplatte verwenden.", player);
             return;
         }
 
-        if (event.getClickedBlock().getType() == Material.GOLD_PLATE) {
-            speed(player);
-        } else if (event.getClickedBlock().getType() == Material.WOOD_PLATE) {
-            regeneration(match, player);
-        } else if (event.getClickedBlock().getType() == Material.STONE_PLATE) {
-            teleport(match, player);
-        } else if (event.getClickedBlock().getType() == Material.IRON_PLATE) {
-            grenade(player);
+        // Check the type of pressure plate:
+        switch (event.getClickedBlock().getType()) {
+            case GOLD_PLATE:
+                speed(player);
+                break;
+            case WOOD_PLATE:
+                regeneration(match, player);
+                break;
+            case STONE_PLATE:
+                teleport(match, player);
+                break;
+            case IRON_PLATE:
+                grenade(player);
+                break;
         }
 
+        // Play sound and effect:
         PlayerUtils.playSound(Sound.NOTE_STICKS, 10, 1, player);
         PlayerUtils.playEffect(player.getLocation(), Effect.ENDER_SIGNAL, null, player);
-        match.getPressurePlateStartTimes().put(player.getUniqueId(), System.currentTimeMillis());
+
+        // Put the current time into the map to prevent the player from using again a pressure plate within 60 seconds:
+        match.getPressurePlateUseTimes().put(player.getUniqueId(), System.currentTimeMillis());
     }
 
+    /**
+     * Gives the given player speed.
+     *
+     * @param player the player to give speed.
+     */
     private void speed(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 2));
         MessageUtils.success("Du hast jetzt für 10 Sekunden Speed.", player);
     }
 
+    /**
+     * Gives the given player regeneration. If the player is a catcher or with a probability of 50% the player gets confusion.
+     *
+     * @param match  the current match of the player
+     * @param player the player to give regeneration
+     */
     private void regeneration(Match match, Player player) {
-        boolean regeneration = match.getRunnerPlayer() == player && Main.getRandom().nextBoolean();
-        if (regeneration) {
+        if (match.getRunnerPlayer() == player && Main.getRandom().nextBoolean()) {
+            // Player is runner and he lucky:
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 2));
             MessageUtils.success("Du hast jetzt für 5 Sekunden Regeneration.", player);
         } else {
+            // Player is catcher or he is unlucky:
             player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 300, 2));
             MessageUtils.success("Du hast jetzt für 15 Sekunden Übelkeit.", player);
         }
     }
 
+    /**
+     * Teleports the given player to a random teleportation point of the map.
+     *
+     * @param match  the current match of the player
+     * @param player the player to teleport
+     */
     private void teleport(Match match, Player player) {
+        // Random teleportation point:
         List<Location> teleportationPoints = match.getGameMap().getTeleportationPoints();
         player.teleport(teleportationPoints.get(Main.getRandom().nextInt(teleportationPoints.size())));
+
         MessageUtils.success("Du wurdest an einen zufälligen Ort teleportiert.", player);
     }
 
+    /**
+     * Gives the given player a blindess grenade.
+     *
+     * @param player the player to give a blindness grenade
+     */
     private void grenade(Player player) {
         player.getInventory().addItem(ItemUtils.createItemStackWithName(Material.SNOW_BALL, ChatColor.GOLD + "Blindheits-Granate"));
         player.updateInventory();

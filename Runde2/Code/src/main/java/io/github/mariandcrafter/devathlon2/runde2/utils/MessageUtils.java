@@ -8,9 +8,13 @@ import org.bukkit.entity.Player;
  */
 public final class MessageUtils {
 
-    private MessageUtils() {}
+    private MessageUtils() {
+    }
 
-    private static final String PREFIX = ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DevAthlon" + ChatColor.GRAY + "] ";
+    /**
+     * The prefix of all messages.
+     */
+    public static final String PREFIX = ChatColor.GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DevAthlon" + ChatColor.GRAY + "] ";
 
     /**
      * Sends the given player an error message

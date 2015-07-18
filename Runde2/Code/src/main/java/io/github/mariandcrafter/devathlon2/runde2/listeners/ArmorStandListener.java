@@ -13,8 +13,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Used to get notified when a player takes armor from an armor stand.
+ */
 public class ArmorStandListener implements Listener {
 
+    /**
+     * Called when a player interacts with an armor stand
+     */
     @SuppressWarnings("unused")
     @EventHandler
     public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
@@ -36,10 +42,18 @@ public class ArmorStandListener implements Listener {
         event.setCancelled(true);
     }
 
+    /**
+     * Called when the runner takes an item from the armor stand.
+     * @param player the player who takes an item
+     * @param match the current match of the player
+     * @param itemStack the item stack the player takes
+     * @param armorStand the armor stand
+     */
     private void runnerTakesItem(Player player, Match match, ItemStack itemStack, ArmorStand armorStand) {
         if (Main.getRandom().nextInt(100) < 75) {
             // in 75% of all cases the player should get the item
 
+            // Check the type of the item to send messages and set the armor of the player
             Material material = itemStack.getType();
             switch (material) {
                 case IRON_HELMET:
@@ -67,12 +81,16 @@ public class ArmorStandListener implements Listener {
             match.getGameMap().removeArmorStand(armorStand);
 
             if (match.runnerHasCompleteArmor()) {
+                // Runner has complete Armor, send messages, play sound and give him the compass which points to the rescue capsule:
+
                 MessageUtils.success("Du hast jetzt die komplette Astronautenrüstung! Begib dich schnell zur Rettungskapsel!", player);
                 MessageUtils.info("Der Runner hat jetzt die komplette Astronautenrüstung!", match.getCatcherPlayer());
+                PlayerUtils.playSound(Sound.NOTE_BASS, 10, 1, match.getRunnerPlayer(), match.getCatcherPlayer());
+
                 match.giveRunnerRescueCapsuleCompass();
 
-                PlayerUtils.playSound(Sound.NOTE_BASS, 10, 1, match.getRunnerPlayer(), match.getCatcherPlayer());
             } else {
+                // Runner has not complete armor, play another sound:
                 PlayerUtils.playSound(Sound.NOTE_PLING, 10, 1, match.getRunnerPlayer(), match.getCatcherPlayer());
             }
 
@@ -82,11 +100,19 @@ public class ArmorStandListener implements Listener {
             // unlucky, the armor stand teleports itself to another location
             match.getGameMap().teleportArmorStand(armorStand, itemStack);
             match.updateRunnerCompass();
+
             MessageUtils.error("Leider hat sich der Armor Stand wegteleportiert.", player);
         }
     }
 
+    /**
+     * Called when the catcher wants to take an item from an armor stand. Teleports the armor stand.
+     * @param match the current match of the catcher
+     * @param itemStack the item stack the player takes
+     * @param armorStand the armor stand
+     */
     private void catcherClickedArmorStand(Match match, ItemStack itemStack, ArmorStand armorStand) {
+        // Teleport the armor stand:
         match.getGameMap().teleportArmorStand(armorStand, itemStack);
         match.updateRunnerCompass();
 

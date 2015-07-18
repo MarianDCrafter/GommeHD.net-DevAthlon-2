@@ -51,14 +51,14 @@ public class GameManager {
      */
     public void onQuit(Player player) {
 
-        // remove invitations:
+        // Remove invitations:
         UUID uuid = player.getUniqueId();
         invitations.remove(uuid);
         for (Map.Entry<UUID, UUID> entry : invitations.entrySet())
             if (entry.getValue() == uuid)
                 invitations.remove(entry.getKey());
 
-        // remove him from the match
+        // Remove him from the match
         Match match = getMatch(player);
         if (match != null)
             match.playerLeft();
@@ -94,19 +94,20 @@ public class GameManager {
      */
     public boolean startMatch(Player player1, Player player2) {
 
+        // Choose random map:
         GameMap map = getRandomFreeMap();
         if(map == null)
             return false;
 
-        // Random roles:
+        // Choose random roles:
         Match match;
         if (Main.getRandom().nextBoolean())
             match = new Match(map, player1.getUniqueId(), player2.getUniqueId());
         else
             match = new Match(map, player2.getUniqueId(), player1.getUniqueId());
 
+        // Start match:
         matches.add(match);
-
         match.start();
 
         return true;
@@ -131,13 +132,17 @@ public class GameManager {
      * @return a random and currently not used map or {@code null} if there is no free map
      */
     private GameMap getRandomFreeMap() {
+
+        // Create a list with all free maps:
         List<GameMap> maps = new ArrayList<GameMap>(Main.getConfiguration().getGameMaps());
         for (Match match : matches)
             maps.remove(match.getGameMap());
 
+        // No free map:
         if (maps.size() == 0)
             return null;
 
+        // Choose random map:
         return maps.get(Main.getRandom().nextInt(maps.size()));
     }
 
