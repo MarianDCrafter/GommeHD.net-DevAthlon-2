@@ -1,8 +1,12 @@
 package io.github.mariandcrafter.devathlon2.runde2.game;
 
 import io.github.mariandcrafter.devathlon2.runde2.Main;
+import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
@@ -131,6 +135,8 @@ public class GameMap {
     }
 
     public void removeArmorStand(ArmorStand armorStand) {
+        PlayerUtils.playEffect(armorStand.getLocation().getBlock().getRelative(BlockFace.UP).getLocation(), Effect.FLAME, null);
+
         freeArmorStandLocations.add(armorStand.getLocation());
         armorStand.remove();
         armorStands.remove(armorStand);
@@ -142,6 +148,10 @@ public class GameMap {
         Location oldLocation = armorStand.getLocation();
         armorStand.remove();
         armorStands.remove(armorStand);
+
+        Location effectLocation = oldLocation.getBlock().getRelative(BlockFace.UP).getLocation();
+        PlayerUtils.playSound(effectLocation, Sound.ENDERMAN_TELEPORT, 10, 1);
+        PlayerUtils.playEffect(effectLocation, Effect.HEART, null);
 
         // spawn a new armor stand:
         armorStand = spawnArmorStand();
@@ -164,7 +174,6 @@ public class GameMap {
 
         // insert the old location into the list with the free armor locations
         freeArmorStandLocations.add(oldLocation);
-
     }
 
 }

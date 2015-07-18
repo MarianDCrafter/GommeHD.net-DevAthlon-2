@@ -3,7 +3,9 @@ package io.github.mariandcrafter.devathlon2.runde2.listeners;
 import io.github.mariandcrafter.devathlon2.runde2.Main;
 import io.github.mariandcrafter.devathlon2.runde2.game.Match;
 import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
+import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,8 +26,11 @@ public class ArmorStandListener implements Listener {
             Player player = event.getPlayer();
             Match match = Main.getGameManager().getMatch(player);
 
-            if (match != null && match.getRunnerPlayer() == player && match.getPhase() == Match.Phase.RUNNING) {
-                runnerTakesItem(player, match, event.getArmorStandItem(), event.getRightClicked());
+            if (match != null && match.getPhase() == Match.Phase.RUNNING) {
+                if (match.getRunnerPlayer() == player)
+                    runnerTakesItem(player, match, event.getArmorStandItem(), event.getRightClicked());
+                else
+                    catcherClickedArmorStand(match, event.getArmorStandItem(), event.getRightClicked());
             }
         }
         event.setCancelled(true);
@@ -34,44 +39,59 @@ public class ArmorStandListener implements Listener {
     private void runnerTakesItem(Player player, Match match, ItemStack itemStack, ArmorStand armorStand) {
         if (Main.getRandom().nextInt(100) < 75) {
             // in 75% of all cases the player should get the item
+
             Material material = itemStack.getType();
             switch (material) {
                 case IRON_HELMET:
                     player.getInventory().setHelmet(new ItemStack(Material.GLASS));
-                    MessageUtils.success(player, "Du hast jetzt den Astronautenhelm!");
-                    MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt den Astronautenhelm!");
+                    MessageUtils.success( "Du hast jetzt den Astronautenhelm!", player);
+                    MessageUtils.info("Der Runner hat jetzt den Astronautenhelm!", match.getCatcherPlayer());
                     break;
                 case IRON_CHESTPLATE:
                     player.getInventory().setChestplate(itemStack);
-                    MessageUtils.success(player, "Du hast jetzt die Astronautenbrustplatte!");
-                    MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die Astronautenbrustplatte!");
+                    MessageUtils.success("Du hast jetzt die Astronautenbrustplatte!", player);
+                    MessageUtils.info("Der Runner hat jetzt die Astronautenbrustplatte!", match.getCatcherPlayer());
                     break;
                 case IRON_LEGGINGS:
                     player.getInventory().setLeggings(itemStack);
-                    MessageUtils.success(player, "Du hast jetzt die Astronautenhose!");
-                    MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die Astronautenhose!");
+                    MessageUtils.success("Du hast jetzt die Astronautenhose!", player);
+                    MessageUtils.info("Der Runner hat jetzt die Astronautenhose!", match.getCatcherPlayer());
                     break;
                 case IRON_BOOTS:
                     player.getInventory().setBoots(itemStack);
-                    MessageUtils.success(player, "Du hast jetzt die Astronautenschuhe!");
-                    MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die Astronautenschuhe!");
+                    MessageUtils.success("Du hast jetzt die Astronautenschuhe!", player);
+                    MessageUtils.info("Der Runner hat jetzt die Astronautenschuhe!", match.getCatcherPlayer());
                     break;
             }
+
             match.getGameMap().removeArmorStand(armorStand);
 
             if (match.runnerHasCompleteArmor()) {
-                MessageUtils.success(player, "Du hast jetzt die komplette Astronautenrüstung! Begib dich schnell zur Rettungskapsel!");
-                MessageUtils.info(match.getCatcherPlayer(), "Der Runner hat jetzt die komplette Astronautenrüstung!");
+                MessageUtils.success("Du hast jetzt die komplette Astronautenrüstung! Begib dich schnell zur Rettungskapsel!", player);
+                MessageUtils.info("Der Runner hat jetzt die komplette Astronautenrüstung!", match.getCatcherPlayer());
                 match.giveRunnerRescueCapsuleCompass();
+
+                PlayerUtils.playSound(Sound.NOTE_BASS, 10, 1, match.getRunnerPlayer(), match.getCatcherPlayer());
+            } else {
+                PlayerUtils.playSound(Sound.NOTE_PLING, 10, 1, match.getRunnerPlayer(), match.getCatcherPlayer());
             }
+
             match.updateRunnerCompass();
 
         } else {
             // unlucky, the armor stand teleports itself to another location
             match.getGameMap().teleportArmorStand(armorStand, itemStack);
             match.updateRunnerCompass();
-            MessageUtils.error(player, "Leider hat sich der Armor Stand wegteleportiert.");
+            MessageUtils.error("Leider hat sich der Armor Stand wegteleportiert.", player);
         }
+    }
+
+    private void catcherClickedArmorStand(Match match, ItemStack itemStack, ArmorStand armorStand) {
+        match.getGameMap().teleportArmorStand(armorStand, itemStack);
+        match.updateRunnerCompass();
+
+        MessageUtils.success("Du hast den Armor Stand wegteleportiert.", match.getCatcherPlayer());
+        MessageUtils.success("Der Catcher hat einen Armor Stand woandershin teleportiert.", match.getRunnerPlayer());
     }
 
 }

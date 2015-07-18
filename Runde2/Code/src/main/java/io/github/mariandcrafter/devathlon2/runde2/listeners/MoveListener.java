@@ -2,7 +2,9 @@ package io.github.mariandcrafter.devathlon2.runde2.listeners;
 
 import io.github.mariandcrafter.devathlon2.runde2.Main;
 import io.github.mariandcrafter.devathlon2.runde2.game.Match;
+import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,7 +38,8 @@ public class MoveListener implements Listener {
         if ((match.getRunnerPlayer() == player || match.getCatcherPlayer() == player) &&
                 match.getGameMap().getMapVoid().getArea().containsBlockLocation(event.getTo()) &&
                 match.getPhase() == Match.Phase.RUNNING) {
-            velocityPlayerToLocation(player, match.getGameMap().getMapVoid().getToLocation());
+
+            suckOutPlayer(player, match.getGameMap().getMapVoid().getToLocation());
 
             if(match.getRunnerPlayer() == player)
                 match.runnerFallingIntoVoid();
@@ -45,11 +48,13 @@ public class MoveListener implements Listener {
         }
     }
 
-    private void velocityPlayerToLocation(Player player, Location to) {
+    private void suckOutPlayer(Player player, Location to) {
         Location from = player.getLocation();
         player.setAllowFlight(true);
         player.setFlying(true);
         player.setVelocity(new Vector(to.getX() - from.getX(), to.getY() - from.getY(), to.getZ() - from.getZ()).multiply(20));
+
+        PlayerUtils.playSound(from, Sound.GHAST_SCREAM, 100, 1);
     }
 
 }

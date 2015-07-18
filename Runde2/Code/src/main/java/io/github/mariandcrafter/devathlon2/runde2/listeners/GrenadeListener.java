@@ -3,6 +3,7 @@ package io.github.mariandcrafter.devathlon2.runde2.listeners;
 import io.github.mariandcrafter.devathlon2.runde2.Main;
 import io.github.mariandcrafter.devathlon2.runde2.game.Match;
 import io.github.mariandcrafter.devathlon2.runde2.utils.MessageUtils;
+import io.github.mariandcrafter.devathlon2.runde2.utils.PlayerUtils;
 import org.bukkit.Effect;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -32,14 +33,14 @@ public class GrenadeListener implements Listener {
         supplyBlindessIfHit(match.getRunnerPlayer(), snowball);
         supplyBlindessIfHit(match.getCatcherPlayer(), snowball);
 
-        snowball.getLocation().getWorld().playEffect(snowball.getLocation(), Effect.SPLASH, 20);
-        snowball.getLocation().getWorld().playSound(snowball.getLocation(), Sound.SPLASH, 10, 1);
+        PlayerUtils.playSound(snowball.getLocation(), Sound.SPLASH, 10, 1);
+        PlayerUtils.playEffect(snowball.getLocation(), Effect.SPLASH, 100);
     }
 
     private void supplyBlindessIfHit(Player player, Snowball snowball) {
         if (snowball.getLocation().distance(player.getLocation()) <= 3) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 50));
-            MessageUtils.error(player, "Du wurdest von einer Blindheits-Granate getroffen und bist jetzt für 10 Sekunden blind!");
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 200, 80));
+            MessageUtils.error("Du wurdest von einer Blindheits-Granate getroffen und bist jetzt für 10 Sekunden blind!", player);
         }
     }
 

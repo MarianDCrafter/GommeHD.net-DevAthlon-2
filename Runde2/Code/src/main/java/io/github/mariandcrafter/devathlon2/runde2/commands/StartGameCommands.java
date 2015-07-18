@@ -57,40 +57,40 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void invite(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            MessageUtils.error(player, "Du bist gerade in einem Spiel.");
+            MessageUtils.error("Du bist gerade in einem Spiel.", player);
             return;
         }
         if (args.length == 0) {
-            MessageUtils.error(player, "Verwendung des Befehls: /invite [Spieler]");
+            MessageUtils.error("Verwendung des Befehls: /invite [Spieler]", player);
             return;
         }
 
         Player invitedPlayer = Bukkit.getPlayer(args[0]);
         if (invitedPlayer == null) {
-            MessageUtils.error(player, "Der Spieler " + args[0] + " ist nicht online.");
+            MessageUtils.error("Der Spieler " + args[0] + " ist nicht online.", player);
             return;
         }
         if (Main.getGameManager().getInvitations().get(invitedPlayer.getUniqueId()) == player.getUniqueId()) {
-            MessageUtils.error(player, "Der Spieler " + invitedPlayer.getName() + " hat dich bereits eingeladen.");
+            MessageUtils.error("Der Spieler " + invitedPlayer.getName() + " hat dich bereits eingeladen.", player);
             return;
         }
         if (Main.getGameManager().getInvitations().get(player.getUniqueId()) == invitedPlayer.getUniqueId()) {
-            MessageUtils.error(player, "Du hast den Spieler " + invitedPlayer.getName() + " bereits eingeladen.");
+            MessageUtils.error("Du hast den Spieler " + invitedPlayer.getName() + " bereits eingeladen.", player);
             return;
         }
         if (Main.getGameManager().isPlaying(invitedPlayer)) {
-            MessageUtils.error(player, "Der Spieler " + invitedPlayer.getName() + " ist gerade in einem Spiel.");
+            MessageUtils.error("Der Spieler " + invitedPlayer.getName() + " ist gerade in einem Spiel.", player);
             return;
         }
 
         UUID invitedBefore = Main.getGameManager().getInvitations().get(player.getUniqueId());
         if (invitedBefore != null) {
             // If he has already invited somebody, he will reject the first invitation.
-            MessageUtils.info(player, "Du hast die Einladung an " + Bukkit.getPlayer(invitedBefore).getName() + " zurückgenommen.");
+            MessageUtils.info("Du hast die Einladung an " + Bukkit.getPlayer(invitedBefore).getName() + " zurückgenommen.", player);
         }
 
-        MessageUtils.info(player, "Du hast eine Einladung an " + invitedPlayer.getName() + " gesendet.");
-        MessageUtils.info(invitedPlayer, "Du hast eine Einladung von " + player.getName() + " bekommen.");
+        MessageUtils.info("Du hast eine Einladung an " + invitedPlayer.getName() + " gesendet.", player);
+        MessageUtils.info("Du hast eine Einladung von " + player.getName() + " bekommen.", invitedPlayer);
 
         Main.getGameManager().getInvitations().put(player.getUniqueId(), invitedPlayer.getUniqueId());
     }
@@ -102,7 +102,7 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void accept(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            MessageUtils.error(player, "Du bist gerade in einem Spiel.");
+            MessageUtils.error("Du bist gerade in einem Spiel.", player);
             return;
         }
 
@@ -110,8 +110,8 @@ public class StartGameCommands implements CommandExecutor {
         if (inviter == null) return;
 
         if(!Main.getGameManager().startMatch(player, inviter)) {
-            MessageUtils.error(player, "Du kannst die Einladung von " + inviter.getName() + " nicht annehmen, da keine Map frei ist.");
-            MessageUtils.error(inviter, player.getName() + " konnte deine Einladung nicht annehmen, da keine Map frei ist.");
+            MessageUtils.error("Du kannst die Einladung von " + inviter.getName() + " nicht annehmen, da keine Map frei ist.", player);
+            MessageUtils.error(player.getName() + " konnte deine Einladung nicht annehmen, da keine Map frei ist.", inviter);
             return;
         }
 
@@ -125,15 +125,15 @@ public class StartGameCommands implements CommandExecutor {
      */
     private void deny(Player player, String[] args) {
         if (Main.getGameManager().isPlaying(player)) {
-            MessageUtils.error(player, "Du bist gerade in einem Spiel.");
+            MessageUtils.error("Du bist gerade in einem Spiel.", player);
             return;
         }
 
         Player inviter = checkInvitationsOf(player, args);
         if (inviter == null) return;
 
-        MessageUtils.info(player, "Du hast die Einladung von " + inviter.getName() + " abgelehnt.");
-        MessageUtils.info(inviter, player.getName() + " hat deine Einladung abgelehnt.");
+        MessageUtils.info("Du hast die Einladung von " + inviter.getName() + " abgelehnt.", player);
+        MessageUtils.info(player.getName() + " hat deine Einladung abgelehnt.", inviter);
 
         Main.getGameManager().getInvitations().remove(inviter.getUniqueId());
     }
@@ -157,14 +157,14 @@ public class StartGameCommands implements CommandExecutor {
             if (inviter == null) {
                 // If he hasn't been invited by someone OR if there are more than one invitations, the method
                 // getPlayerWhoInvited() returns null.
-                MessageUtils.error(player, "Du wurdest von niemandem eingeladen oder du hast mehrere Einladungen erhalten, weshalb du zusätzlich einen Spieler angeben musst (/deny [Spieler])");
+                MessageUtils.error("Du wurdest von niemandem eingeladen oder du hast mehrere Einladungen erhalten, weshalb du zusätzlich einen Spieler angeben musst (/deny [Spieler])", player);
                 return null;
             }
         } else {
             inviter = Bukkit.getPlayer(args[0]);
 
             if (Main.getGameManager().getInvitations().get(inviter.getUniqueId()) != player.getUniqueId()) {
-                MessageUtils.error(player, "Du wurdest nicht von " + args[0] + " eingeladen.");
+                MessageUtils.error("Du wurdest nicht von " + args[0] + " eingeladen.", player);
                 return null;
             }
         }
