@@ -33,6 +33,13 @@
             <artifactId>bukkit</artifactId>
             <version>1.8.7-R0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.mariandcrafter.bukkitpluginapi</groupId>
+            <artifactId>BukkitPluginAPI</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

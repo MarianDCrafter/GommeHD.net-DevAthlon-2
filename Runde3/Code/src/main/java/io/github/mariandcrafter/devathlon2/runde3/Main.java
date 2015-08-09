@@ -1,12 +1,13 @@
 package io.github.mariandcrafter.devathlon2.runde3;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import io.github.mariandcrafter.bukkitpluginapi.Plugin;
+import org.bukkit.ChatColor;
 
 /**
  * The main class of the DevAthlon plugin.
  * @author MarianDCrafter
  */
-public class Main extends JavaPlugin {
+public class Main extends Plugin {
 
     private static Main instance;
 
@@ -33,6 +34,16 @@ public class Main extends JavaPlugin {
      */
     public static Main getInstance() {
         return instance;
+    }
+
+    @Override
+    protected String prefix() {
+        return "DevAthlon";
+    }
+
+    @Override
+    protected ChatColor defaultColor() {
+        return ChatColor.GOLD;
     }
 
 }
