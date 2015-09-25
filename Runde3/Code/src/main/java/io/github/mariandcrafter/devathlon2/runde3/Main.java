@@ -1,10 +1,12 @@
 package io.github.mariandcrafter.devathlon2.runde3;
 
 import io.github.mariandcrafter.bukkitpluginapi.Plugin;
+import io.github.mariandcrafter.bukkitpluginapi.messages.Message;
 import org.bukkit.ChatColor;
 
 /**
  * The main class of the DevAthlon plugin.
+ *
  * @author MarianDCrafter
  */
 public class Main extends Plugin {
@@ -18,6 +20,8 @@ public class Main extends Plugin {
     public void onEnable() {
         instance = this;
 
+        getMessageSender().send(new Message.Builder("Hello World!")
+                .setConsole(true).build());
         System.out.println("2. Devathlon, 3. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
 

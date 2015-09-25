@@ -37,7 +37,7 @@
         <dependency>
             <groupId>io.github.mariandcrafter.bukkitpluginapi</groupId>
             <artifactId>BukkitPluginAPI</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
