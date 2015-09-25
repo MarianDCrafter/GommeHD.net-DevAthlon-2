@@ -2,3 +2,4 @@ name: DevAthlon2Runde3
 version: 1.0-SNAPSHOT
 author: [MarianDCrafter, TobiArtz, Its_Enzo]
 main: io.github.mariandcrafter.devathlon2.runde3.Main
+depend: [BukkitPluginAPI]
