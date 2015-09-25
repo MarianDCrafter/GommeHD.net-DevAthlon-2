@@ -1,0 +1,11 @@
+lobbySpawn:
+  world: world
+  x: -43.5
+  y: 4.0
+  z: 15.5
+
+mapSpawn:
+  world: world
+  x: 4.5
+  y: 4.0
+  z: 4.5
