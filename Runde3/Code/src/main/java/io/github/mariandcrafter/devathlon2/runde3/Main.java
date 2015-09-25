@@ -2,9 +2,12 @@ package io.github.mariandcrafter.devathlon2.runde3;
 
 import io.github.mariandcrafter.bukkitpluginapi.Plugin;
 import io.github.mariandcrafter.bukkitpluginapi.messages.MessageSender;
+import io.github.mariandcrafter.devathlon2.runde3.commands.OfferCommand;
 import io.github.mariandcrafter.devathlon2.runde3.commands.StartCommand;
 import io.github.mariandcrafter.devathlon2.runde3.game.GameManager;
 import io.github.mariandcrafter.devathlon2.runde3.listeners.DisableMobSpawnListener;
+import io.github.mariandcrafter.devathlon2.runde3.listeners.SilverfishInfectListener;
+import io.github.mariandcrafter.devathlon2.runde3.listeners.VillagerTradeListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -63,13 +66,18 @@ public class Main extends Plugin {
      */
     public void loadListeners() {
         Bukkit.getPluginManager().registerEvents(new DisableMobSpawnListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SilverfishInfectListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VillagerTradeListener(), this);
     }
 
     /**
      * Sets the command executors of the used commands in this plugin.
      */
     public void loadCommands() {
-        addCommands(new StartCommand());
+        addCommands(
+                new StartCommand(),
+                new OfferCommand()
+        );
     }
 
     /**

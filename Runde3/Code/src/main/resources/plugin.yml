@@ -6,4 +6,4 @@ depend: [BukkitPluginAPI]
 
 commands:
   start:
-  
+  acceptoffer:

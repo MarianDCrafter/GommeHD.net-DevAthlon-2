@@ -8,10 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
+import org.bukkit.entity.Villager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GameManager implements Runnable {
 
@@ -28,11 +27,21 @@ public class GameManager implements Runnable {
     private double silverfishesPerSecond;
 
     private List<UUID> playing = new ArrayList<UUID>();
+    private Map<Villager, VillagerType> villagers = new HashMap<Villager, VillagerType>();
 
     public GameManager() {
         phase = Phase.LOBBY;
         time = LOBBY_TIME;
+        spawnVillagers();
         Bukkit.getScheduler().runTaskTimer(Main.getInstance(), this, 20, 20);
+    }
+
+    private void spawnVillagers() {
+        for (Map.Entry<Location, VillagerType> entry : Main.getConfiguration().getVillagerSpawns().entrySet()) {
+            Villager villager = (Villager) entry.getKey().getWorld().spawnEntity(entry.getKey(), EntityType.VILLAGER);
+            villager.setProfession(entry.getValue().getProfession());
+            villagers.put(villager, entry.getValue());
+        }
     }
 
     @Override
@@ -104,4 +113,11 @@ public class GameManager implements Runnable {
         return Bukkit.getPlayer(playing.get(Main.getRandom().nextInt(playing.size())));
     }
 
+    public List<UUID> getPlaying() {
+        return playing;
+    }
+
+    public Map<Villager, VillagerType> getVillagers() {
+        return villagers;
+    }
 }

@@ -13,22 +13,64 @@ mapSpawn:
 silverfishSpawns:
   spawn1:
     x: 13
-    y: 5
+    y: 4
     z: 42
   spawn2:
     x: 25
-    y: 5
+    y: 4
     z: 20
   spawn3:
     x: 44
-    y: 5
+    y: 4
     z: 38
   spawn4:
     x: 71
-    y: 5
+    y: 4
     z: 51
   spawn5:
     x: 97
-    y: 5
+    y: 4
     z: 82
 
+minigames:
+  archery:
+    area:
+      start:
+        x: 71
+        y: 4
+        z: 98
+      end:
+        x: 87
+        y: 7
+        z: 106
+    hayBlocks:
+      block1:
+        x: 91
+        y: 4
+        z: 102
+      block2:
+        x: 94
+        y: 4
+        z: 104
+      block3:
+        x: 95
+        y: 5
+        z: 100
+      block4:
+        x: 99
+        y: 4
+        z: 101
+      block5:
+        x: 103
+        y: 4
+        z: 104
+      block6:
+        x: 106
+        y: 6
+        z: 102
+
+villagerSpawns:
+  archery:
+    x: 76.5
+    y: 4
+    z: 106.5

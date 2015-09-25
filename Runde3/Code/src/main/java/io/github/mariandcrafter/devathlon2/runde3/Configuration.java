@@ -1,12 +1,15 @@
 package io.github.mariandcrafter.devathlon2.runde3;
 
+import io.github.mariandcrafter.devathlon2.runde3.game.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Configuration {
 
@@ -15,6 +18,7 @@ public class Configuration {
     private Location lobbySpawn;
     private Location mapSpawn;
     private List<Location> silverfishSpawns;
+    private Map<Location, VillagerType> villagerSpawns;
 
     /**
      * @param configuration the configuration file of the plugin
@@ -34,6 +38,7 @@ public class Configuration {
         lobbySpawn = loadLocationWithYawAndPitch(world, "lobbySpawn");
         mapSpawn = loadLocationWithYawAndPitch(world, "mapSpawn");
         silverfishSpawns = loadSilverfishSpawns(world, "silverfishSpawns");
+        villagerSpawns = loadVillagerSpawns(world, "villagerSpawns");
     }
 
     private List<Location> loadSilverfishSpawns(World world, String path) {
@@ -42,6 +47,12 @@ public class Configuration {
             silverfishSpawns.add(loadBlockLocation(world, path + "." + silverfishSpawnPath));
         }
         return silverfishSpawns;
+    }
+
+    private Map<Location, VillagerType> loadVillagerSpawns(World world, String path) {
+        Map<Location, VillagerType> villagerSpawns = new HashMap<Location, VillagerType>();
+        villagerSpawns.put(loadLocationWithYawAndPitch(world, path + ".archery"), VillagerType.ARCHERY);
+        return villagerSpawns;
     }
 
     /**
@@ -122,4 +133,7 @@ public class Configuration {
         return silverfishSpawns;
     }
 
+    public Map<Location, VillagerType> getVillagerSpawns() {
+        return villagerSpawns;
+    }
 }
