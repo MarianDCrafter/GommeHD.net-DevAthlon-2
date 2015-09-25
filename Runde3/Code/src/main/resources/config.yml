@@ -1,11 +1,34 @@
+world: world
+
 lobbySpawn:
-  world: world
   x: -43.5
   y: 4.0
   z: 15.5
 
 mapSpawn:
-  world: world
   x: 4.5
   y: 4.0
   z: 4.5
+
+silverfishSpawns:
+  spawn1:
+    x: 13
+    y: 5
+    z: 42
+  spawn2:
+    x: 25
+    y: 5
+    z: 20
+  spawn3:
+    x: 44
+    y: 5
+    z: 38
+  spawn4:
+    x: 71
+    y: 5
+    z: 51
+  spawn5:
+    x: 97
+    y: 5
+    z: 82
+

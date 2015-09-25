@@ -2,10 +2,14 @@ package io.github.mariandcrafter.devathlon2.runde3;
 
 import io.github.mariandcrafter.bukkitpluginapi.Plugin;
 import io.github.mariandcrafter.bukkitpluginapi.messages.MessageSender;
+import io.github.mariandcrafter.devathlon2.runde3.commands.StartCommand;
 import io.github.mariandcrafter.devathlon2.runde3.game.GameManager;
+import io.github.mariandcrafter.devathlon2.runde3.listeners.DisableMobSpawnListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.Random;
 
 /**
  * The main class of the DevAthlon plugin.
@@ -17,6 +21,7 @@ public class Main extends Plugin {
     private static Main instance;
     private static Configuration configuration;
     private static GameManager gameManager;
+    private static Random random = new Random();
 
     /**
      * Called when the plugin is enabled. Sets up everything including listeners, commands etc.
@@ -27,6 +32,8 @@ public class Main extends Plugin {
 
         loadConfig();
         loadGameManager();
+        loadListeners();
+        loadCommands();
 
         System.out.println("2. Devathlon, 3. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
@@ -49,6 +56,20 @@ public class Main extends Plugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             gameManager.onJoin(player);
         }
+    }
+
+    /**
+     * Registers every Listener.
+     */
+    public void loadListeners() {
+        Bukkit.getPluginManager().registerEvents(new DisableMobSpawnListener(), this);
+    }
+
+    /**
+     * Sets the command executors of the used commands in this plugin.
+     */
+    public void loadCommands() {
+        addCommands(new StartCommand());
     }
 
     /**
@@ -82,6 +103,13 @@ public class Main extends Plugin {
 
     public static MessageSender messageSender() {
         return instance.getMessageSender();
+    }
+
+    /**
+     * @return the Random instance used by the whole plugin
+     */
+    public static Random getRandom() {
+        return random;
     }
 
     @Override

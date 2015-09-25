@@ -5,12 +5,16 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Configuration {
 
     private FileConfiguration configuration;
 
     private Location lobbySpawn;
     private Location mapSpawn;
+    private List<Location> silverfishSpawns;
 
     /**
      * @param configuration the configuration file of the plugin
@@ -25,8 +29,19 @@ public class Configuration {
      * Loads the data from the file.
      */
     private void loadConfiguration() {
-        lobbySpawn = loadLocationWithYawAndPitch("lobbySpawn");
-        mapSpawn = loadLocationWithYawAndPitch("mapSpawn");
+        World world = Bukkit.getWorld(configuration.getString("world"));
+
+        lobbySpawn = loadLocationWithYawAndPitch(world, "lobbySpawn");
+        mapSpawn = loadLocationWithYawAndPitch(world, "mapSpawn");
+        silverfishSpawns = loadSilverfishSpawns(world, "silverfishSpawns");
+    }
+
+    private List<Location> loadSilverfishSpawns(World world, String path) {
+        List<Location> silverfishSpawns = new ArrayList<Location>();
+        for (String silverfishSpawnPath : configuration.getConfigurationSection(path).getKeys(false)) {
+            silverfishSpawns.add(loadBlockLocation(world, path + "." + silverfishSpawnPath));
+        }
+        return silverfishSpawns;
     }
 
     /**
@@ -101,6 +116,10 @@ public class Configuration {
 
     public Location getMapSpawn() {
         return mapSpawn;
+    }
+
+    public List<Location> getSilverfishSpawns() {
+        return silverfishSpawns;
     }
 
 }
