@@ -29,9 +29,15 @@ public abstract class Game {
 
     protected abstract void reset();
 
+    public void stop() {
+        reset();
+        gamemode.stoppedGame(this);
+    }
+
     public void playerLeftArea() {
         reset();
-        getPlayer().sendMessage("Du hast den Bereich für dieses Spiel verlassen.");
+        gamemode.stoppedGame(this);
+        getPlayer().sendMessage("§cDu hast den Bereich für dieses Spiel verlassen.");
     }
 
 }

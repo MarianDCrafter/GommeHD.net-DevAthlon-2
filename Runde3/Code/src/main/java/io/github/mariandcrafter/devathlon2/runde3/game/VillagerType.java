@@ -4,7 +4,9 @@ import org.bukkit.entity.Villager;
 
 public enum VillagerType {
 
-    ARCHERY("Mal Schießen", Villager.Profession.BLACKSMITH);
+    ARCHERY("Mal Schießen", Villager.Profession.BLACKSMITH),
+    HEALER_CHEAP("Medizin", Villager.Profession.LIBRARIAN),
+    HEALER_EXPENSIVE("Medizin", Villager.Profession.LIBRARIAN);
 
     private String numberString;
     private Villager.Profession profession;

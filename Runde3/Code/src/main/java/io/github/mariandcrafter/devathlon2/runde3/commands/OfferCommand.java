@@ -18,9 +18,9 @@ public class OfferCommand {
     )
     public void offer(Player player, List<String> arguments) {
         if (!Main.getGameManager().getPlaying().contains(player.getUniqueId())) {
-            player.sendMessage("Du spielst nicht mit.");
+            player.sendMessage("§cDu spielst nicht mit.");
         } else if (Main.getGameManager().getGames().containsKey(player.getUniqueId())) {
-            player.sendMessage("Du spielst bereits ein Minispiel.");
+            player.sendMessage("§cDu spielst bereits ein Minispiel.");
         } else {
             Offer.OFFERS.get(Integer.parseInt(arguments.get(0))).acceptOffer(player);
         }

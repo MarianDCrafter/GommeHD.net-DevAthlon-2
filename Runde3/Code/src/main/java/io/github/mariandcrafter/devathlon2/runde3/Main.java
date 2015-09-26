@@ -5,10 +5,7 @@ import io.github.mariandcrafter.bukkitpluginapi.messages.MessageSender;
 import io.github.mariandcrafter.devathlon2.runde3.commands.OfferCommand;
 import io.github.mariandcrafter.devathlon2.runde3.commands.StartCommand;
 import io.github.mariandcrafter.devathlon2.runde3.game.GameManager;
-import io.github.mariandcrafter.devathlon2.runde3.listeners.DisableMobSpawnListener;
-import io.github.mariandcrafter.devathlon2.runde3.listeners.MoveListener;
-import io.github.mariandcrafter.devathlon2.runde3.listeners.SilverfishInfectListener;
-import io.github.mariandcrafter.devathlon2.runde3.listeners.VillagerTradeListener;
+import io.github.mariandcrafter.devathlon2.runde3.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -48,7 +45,7 @@ public class Main extends Plugin {
     private void removeEntities() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if (!(entity instanceof Plugin)) {
+                if (!(entity instanceof Player)) {
                     entity.remove();
                 }
             }
@@ -71,7 +68,7 @@ public class Main extends Plugin {
         gameManager = new GameManager();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            gameManager.onJoin(player);
+            gameManager.joinLobby(player);
         }
     }
 
@@ -83,6 +80,9 @@ public class Main extends Plugin {
         Bukkit.getPluginManager().registerEvents(new SilverfishInfectListener(), this);
         Bukkit.getPluginManager().registerEvents(new VillagerTradeListener(), this);
         Bukkit.getPluginManager().registerEvents(new MoveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().registerEvents(configuration.getArchery(), this);
     }
 
@@ -138,7 +138,7 @@ public class Main extends Plugin {
 
     @Override
     protected String prefix() {
-        return "DevAthlon";
+        return "Mittelalter";
     }
 
     @Override

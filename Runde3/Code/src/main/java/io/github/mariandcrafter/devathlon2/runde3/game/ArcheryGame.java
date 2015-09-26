@@ -21,7 +21,7 @@ public class ArcheryGame extends Game {
     public void hit() {
         remainingArrows--;
         hitBlocks++;
-        getPlayer().sendMessage("Sehr schön, du hast getroffen!");
+        getPlayer().sendMessage("§7[Bogenschießen] §aSehr schön, du hast getroffen!");
 
         if (remainingArrows <= 0) {
             endGame();
@@ -30,7 +30,7 @@ public class ArcheryGame extends Game {
 
     public void fail() {
         remainingArrows--;
-        getPlayer().sendMessage("Das war wohl nichts!");
+        getPlayer().sendMessage("§7[Bogenschießen] §5Das war wohl nichts!");
 
         if (remainingArrows <= 0) {
             endGame();
@@ -40,9 +40,9 @@ public class ArcheryGame extends Game {
     private void endGame() {
         reset();
         gamemode.stoppedGame(this);
-        getPlayer().sendMessage("Das Bogenschießen ist beendet.");
+        getPlayer().sendMessage("§7[Bogenschießen] §eDas Bogenschießen ist beendet.");
         getPlayer().getInventory().addItem(new ItemStack(Material.BREAD, hitBlocks));
-        getPlayer().sendMessage("Du bekommst " + hitBlocks + " Brote.");
+        getPlayer().sendMessage("§7[Bogenschießen] §aDu bekommst " + hitBlocks + " Brote.");
     }
 
     protected void reset() {

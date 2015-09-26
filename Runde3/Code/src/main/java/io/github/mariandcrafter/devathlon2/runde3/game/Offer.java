@@ -3,6 +3,7 @@ package io.github.mariandcrafter.devathlon2.runde3.game;
 import io.github.mariandcrafter.devathlon2.runde3.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ public class Offer {
         OFFERS.add(new Offer(VillagerType.ARCHERY, 2, 1, archery));
         OFFERS.add(new Offer(VillagerType.ARCHERY, 5, 2, archery));
         OFFERS.add(new Offer(VillagerType.ARCHERY, 8, 3, archery));
+
+        Healer healer = new Healer();
+        OFFERS.add(new Offer(VillagerType.HEALER_EXPENSIVE, 1, 5, healer));
+        OFFERS.add(new Offer(VillagerType.HEALER_CHEAP, 1, 3, healer));
     }
 
     public static List<Offer> offersForVillagerType(VillagerType villagerType) {
@@ -32,13 +37,13 @@ public class Offer {
     private VillagerType villagerType;
     private int number;
     private int costs;
-    private Gamemode gamemode;
+    private Buyable buyable;
 
-    public Offer(VillagerType villagerType, int number, int costs, Gamemode gamemode) {
+    public Offer(VillagerType villagerType, int number, int costs, Buyable buyable) {
         this.villagerType = villagerType;
         this.number = number;
         this.costs = costs;
-        this.gamemode = gamemode;
+        this.buyable = buyable;
     }
 
     public VillagerType getVillagerType() {
@@ -53,18 +58,26 @@ public class Offer {
         return costs;
     }
 
-    public Gamemode getGamemode() {
-        return gamemode;
+    public Buyable getBuyable() {
+        return buyable;
     }
 
     public void acceptOffer(Player player) {
-        if (!playerHasBread(player, costs)) {
-            player.sendMessage("Du hast nicht genug Brot dafür.");
+        Villager lastOfferVillager = Main.getGameManager().getLastOfferVillagers().get(player.getUniqueId());
+        if (lastOfferVillager == null ||
+                !offersForVillagerType(Main.getGameManager().getVillagers().get(lastOfferVillager)).contains(this) ||
+                player.getLocation().distance(lastOfferVillager.getLocation()) > 5) {
+            player.sendMessage("§cAngebot konnte nicht angenommen werden. Gehe bitte erneut zu dem Verkäufer.");
             return;
         }
-        player.getInventory().remove(new ItemStack(Material.BREAD, costs));
 
-        gamemode.startGameWithOffer(this, player);
+        if (!playerHasBread(player, costs)) {
+            player.sendMessage("§cDu hast nicht genug Brot dafür.");
+            return;
+        }
+        player.getInventory().removeItem(new ItemStack(Material.BREAD, costs));
+
+        buyable.bought(this, player);
     }
 
     private boolean playerHasBread(Player player, int amount) {

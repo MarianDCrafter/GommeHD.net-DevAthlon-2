@@ -1,9 +1,9 @@
 world: world
 
 lobbySpawn:
-  x: -43.5
+  x: 44.5
   y: 4.0
-  z: 15.5
+  z: -12.5
 
 mapSpawn:
   x: 4.5
@@ -70,6 +70,47 @@ gamemodes:
         z: 102
 
 villagerSpawns:
+  healersExpensive:
+    healer1:
+      x: 16.5
+      y: 4.0
+      z: 66.5
+      area:
+        start:
+          x: 9
+          y: 7
+          z: 68
+        end:
+          x: 23
+          y: 3
+          z: 61
+    healer2:
+      x: 83.5
+      y: 4.0
+      z: 66.5
+      area:
+        start:
+          x: 84
+          y: 8
+          z: 66
+        end:
+          x: 77
+          y: 3
+          z: 62
+  healersCheap:
+    healer1:
+      x: 99.5
+      y: 4.0
+      z: 7.5
+      area:
+        start:
+          x: 108
+          y: 9
+          z: 3
+        end:
+          x: 92
+          y: 3
+          z: 16
   archery:
     x: 76.5
     y: 4.0

@@ -18,6 +18,7 @@ public class SilverfishInfectListener implements Listener {
             if (!Main.getGameManager().getPlaying().contains(player.getUniqueId())) { return; }
 
             event.getDamager().remove();
+            player.sendMessage("§cDu wurdest von einer Ratte infiziert und hast die Pest. §6Suche schnell einen Heiler auf und hole dir Medizin.");
             player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 12000, 1));
         }
     }

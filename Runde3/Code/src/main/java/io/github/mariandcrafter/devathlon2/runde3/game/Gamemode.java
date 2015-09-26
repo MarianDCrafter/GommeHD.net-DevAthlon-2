@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Gamemode<GameType extends Game> {
+public abstract class Gamemode<GameType extends Game> implements Buyable {
 
     private Area area;
     protected List<GameType> games = new ArrayList<GameType>();
@@ -19,7 +19,7 @@ public abstract class Gamemode<GameType extends Game> {
         return area;
     }
 
-    public abstract void startGameWithOffer(Offer offer, Player player);
+    public abstract void bought(Offer offer, Player player);
 
     public void stoppedGame(GameType game) {
         games.remove(game);

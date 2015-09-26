@@ -55,9 +55,13 @@ public class Configuration {
 
     private Map<Location, VillagerType> loadVillagerSpawns(World world, String path) {
         Map<Location, VillagerType> villagerSpawns = new HashMap<Location, VillagerType>();
-        System.out.println(path + ".archery");
-        System.out.println(configuration.getConfigurationSection(path + ".archery"));
         villagerSpawns.put(loadLocationWithYawAndPitch(world, path + ".archery"), VillagerType.ARCHERY);
+        for (String villagerSpawnPath : configuration.getConfigurationSection(path + ".healersCheap").getKeys(false)) {
+            villagerSpawns.put(loadLocation(world, path + ".healersCheap." + villagerSpawnPath), VillagerType.HEALER_CHEAP);
+        }
+        for (String villagerSpawnPath : configuration.getConfigurationSection(path + ".healersExpensive").getKeys(false)) {
+            villagerSpawns.put(loadLocation(world, path + ".healersExpensive." + villagerSpawnPath), VillagerType.HEALER_EXPENSIVE);
+        }
         return villagerSpawns;
     }
 

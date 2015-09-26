@@ -30,6 +30,8 @@ public class GameManager implements Runnable {
     private Map<Villager, VillagerType> villagers = new HashMap<Villager, VillagerType>();
     private Map<UUID, Game> games = new HashMap<UUID, Game>();
 
+    private Map<UUID, Villager> lastOfferVillagers = new HashMap<UUID, Villager>();
+
     public GameManager() {
         phase = Phase.LOBBY;
         time = LOBBY_TIME;
@@ -39,10 +41,11 @@ public class GameManager implements Runnable {
 
     private void spawnVillagers() {
         for (Map.Entry<Location, VillagerType> entry : Main.getConfiguration().getVillagerSpawns().entrySet()) {
+            System.out.println(entry.getKey());
             Villager villager = (Villager) entry.getKey().getWorld().spawnEntity(entry.getKey(), EntityType.VILLAGER);
             villager.setProfession(entry.getValue().getProfession());
             villagers.put(villager, entry.getValue());
-            System.out.println(villager);
+            System.out.println(villager.getLocation());
         }
     }
 
@@ -90,7 +93,7 @@ public class GameManager implements Runnable {
         }
     }
 
-    public void onJoin(Player player) {
+    public void joinLobby(Player player) {
         player.teleport(Main.getConfiguration().getLobbySpawn());
         // TODO PlayerUtils.clear(player);
     }
@@ -98,6 +101,40 @@ public class GameManager implements Runnable {
     public void joinGame(Player player) {
         playing.add(player.getUniqueId());
         player.teleport(Main.getConfiguration().getMapSpawn());
+    }
+
+    public void removePlayerFromGame(Player player) {
+        System.out.println(2);
+        if (playing.contains(player.getUniqueId())) {
+            System.out.println(3);
+            playing.remove(player.getUniqueId());
+            lastOfferVillagers.remove(player.getUniqueId());
+            Bukkit.broadcastMessage("§6" + player.getName() + " §4ist gestorben!");
+            System.out.println(4);
+        }
+
+        System.out.println(5);
+        if (phase == Phase.INGAME && playing.size() == 1) {
+            System.out.println(6);
+            Bukkit.broadcastMessage("§9Das Spiel ist beendet.");
+            Bukkit.broadcastMessage("§9Gewonnen hat §l" + Bukkit.getPlayer(playing.get(0)).getName() + "§9.");
+            phase = Phase.LOBBY;
+
+            System.out.println(7);
+            for (UUID uuid : playing) {
+                joinLobby(Bukkit.getPlayer(uuid));
+            }
+            playing.clear();
+            lastOfferVillagers.clear();
+
+            System.out.println(8);
+            Iterator<Game> iterator = games.values().iterator();
+            while (iterator.hasNext()) {
+                Game game = iterator.next();
+                iterator.remove();
+                game.stop();
+            }
+        }
     }
 
     private int silverfishCount() {
@@ -126,4 +163,9 @@ public class GameManager implements Runnable {
     public Map<UUID, Game> getGames() {
         return games;
     }
+
+    public Map<UUID, Villager> getLastOfferVillagers() {
+        return lastOfferVillagers;
+    }
+
 }

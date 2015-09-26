@@ -42,8 +42,10 @@ public class Archery extends Gamemode<ArcheryGame> implements Listener {
     }
 
     @Override
-    public void startGameWithOffer(Offer offer, Player player) {
-        games.add(new ArcheryGame((Gamemode) this, player, offer.getNumber()));
+    public void bought(Offer offer, Player player) {
+        ArcheryGame game = new ArcheryGame((Gamemode) this, player, offer.getNumber());
+        games.add(game);
+        Main.getGameManager().getGames().put(player.getUniqueId(), game);
     }
 
     @EventHandler
