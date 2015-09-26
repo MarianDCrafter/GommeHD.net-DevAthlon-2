@@ -6,10 +6,13 @@ import io.github.mariandcrafter.devathlon2.runde3.commands.OfferCommand;
 import io.github.mariandcrafter.devathlon2.runde3.commands.StartCommand;
 import io.github.mariandcrafter.devathlon2.runde3.game.GameManager;
 import io.github.mariandcrafter.devathlon2.runde3.listeners.DisableMobSpawnListener;
+import io.github.mariandcrafter.devathlon2.runde3.listeners.MoveListener;
 import io.github.mariandcrafter.devathlon2.runde3.listeners.SilverfishInfectListener;
 import io.github.mariandcrafter.devathlon2.runde3.listeners.VillagerTradeListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -33,12 +36,23 @@ public class Main extends Plugin {
     public void onEnable() {
         instance = this;
 
+        removeEntities();
         loadConfig();
         loadGameManager();
         loadListeners();
         loadCommands();
 
         System.out.println("2. Devathlon, 3. Runde - GreenGlowPixel-Team - Plugin enabled!");
+    }
+
+    private void removeEntities() {
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (!(entity instanceof Plugin)) {
+                    entity.remove();
+                }
+            }
+        }
     }
 
     /**
@@ -68,6 +82,8 @@ public class Main extends Plugin {
         Bukkit.getPluginManager().registerEvents(new DisableMobSpawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new SilverfishInfectListener(), this);
         Bukkit.getPluginManager().registerEvents(new VillagerTradeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MoveListener(), this);
+        Bukkit.getPluginManager().registerEvents(configuration.getArchery(), this);
     }
 
     /**

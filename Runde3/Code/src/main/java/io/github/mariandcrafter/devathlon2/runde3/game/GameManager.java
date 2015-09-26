@@ -20,7 +20,7 @@ public class GameManager implements Runnable {
     }
 
     private final static int LOBBY_TIME = 60;
-    private final static double SILVERFISHES_PER_SECOND = 0.1;
+    private final static double SILVERFISHES_PER_SECOND = 0.05;
 
     private Phase phase;
     private int time;
@@ -28,6 +28,7 @@ public class GameManager implements Runnable {
 
     private List<UUID> playing = new ArrayList<UUID>();
     private Map<Villager, VillagerType> villagers = new HashMap<Villager, VillagerType>();
+    private Map<UUID, Game> games = new HashMap<UUID, Game>();
 
     public GameManager() {
         phase = Phase.LOBBY;
@@ -41,6 +42,7 @@ public class GameManager implements Runnable {
             Villager villager = (Villager) entry.getKey().getWorld().spawnEntity(entry.getKey(), EntityType.VILLAGER);
             villager.setProfession(entry.getValue().getProfession());
             villagers.put(villager, entry.getValue());
+            System.out.println(villager);
         }
     }
 
@@ -73,7 +75,7 @@ public class GameManager implements Runnable {
                 System.out.println(silverfish.getLocation());
                 System.out.println(silverfish.getTarget());
             }
-            silverfishesPerSecond *= 1.01;
+            silverfishesPerSecond += 0.001;
         }
     }
 
@@ -119,5 +121,9 @@ public class GameManager implements Runnable {
 
     public Map<Villager, VillagerType> getVillagers() {
         return villagers;
+    }
+
+    public Map<UUID, Game> getGames() {
+        return games;
     }
 }

@@ -1,5 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde3;
 
+import io.github.mariandcrafter.devathlon2.runde3.game.Archery;
+import io.github.mariandcrafter.devathlon2.runde3.game.Area;
 import io.github.mariandcrafter.devathlon2.runde3.game.VillagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,6 +21,7 @@ public class Configuration {
     private Location mapSpawn;
     private List<Location> silverfishSpawns;
     private Map<Location, VillagerType> villagerSpawns;
+    private Archery archery;
 
     /**
      * @param configuration the configuration file of the plugin
@@ -39,6 +42,7 @@ public class Configuration {
         mapSpawn = loadLocationWithYawAndPitch(world, "mapSpawn");
         silverfishSpawns = loadSilverfishSpawns(world, "silverfishSpawns");
         villagerSpawns = loadVillagerSpawns(world, "villagerSpawns");
+        archery = loadArchery(world, "gamemodes.archery");
     }
 
     private List<Location> loadSilverfishSpawns(World world, String path) {
@@ -51,8 +55,19 @@ public class Configuration {
 
     private Map<Location, VillagerType> loadVillagerSpawns(World world, String path) {
         Map<Location, VillagerType> villagerSpawns = new HashMap<Location, VillagerType>();
+        System.out.println(path + ".archery");
+        System.out.println(configuration.getConfigurationSection(path + ".archery"));
         villagerSpawns.put(loadLocationWithYawAndPitch(world, path + ".archery"), VillagerType.ARCHERY);
         return villagerSpawns;
+    }
+
+    private Archery loadArchery(World world, String path) {
+        Area area = loadArea(world, path + ".area");
+        List<Location> hayBlocks = new ArrayList<Location>();
+        for (String hayBlockPath : configuration.getConfigurationSection(path + ".hayBlocks").getKeys(false)) {
+            hayBlocks.add(loadBlockLocation(world, path + ".hayBlocks." + hayBlockPath));
+        }
+        return new Archery(area, hayBlocks);
     }
 
     /**
@@ -121,6 +136,20 @@ public class Configuration {
         );
     }
 
+    /**
+     * Loads an area with a start and an end location.
+     *
+     * @param world the world of the area
+     * @param path  the path to the area section
+     * @return the loaded area
+     */
+    private Area loadArea(World world, String path) {
+        return new Area(
+                loadBlockLocation(world, path + ".start"),
+                loadBlockLocation(world, path + ".end")
+        );
+    }
+
     public Location getLobbySpawn() {
         return lobbySpawn;
     }
@@ -136,4 +165,9 @@ public class Configuration {
     public Map<Location, VillagerType> getVillagerSpawns() {
         return villagerSpawns;
     }
+
+    public Archery getArchery() {
+        return archery;
+    }
+
 }
