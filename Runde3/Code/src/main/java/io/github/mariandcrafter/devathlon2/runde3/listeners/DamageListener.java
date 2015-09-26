@@ -1,11 +1,17 @@
 package io.github.mariandcrafter.devathlon2.runde3.listeners;
 
 import io.github.mariandcrafter.devathlon2.runde3.Main;
+import io.github.mariandcrafter.devathlon2.runde3.game.Game;
+import io.github.mariandcrafter.devathlon2.runde3.game.swordplay.SwordplayGame;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class DamageListener implements Listener {
 
@@ -14,29 +20,38 @@ public class DamageListener implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            System.out.println(-1);
             if (!Main.getGameManager().getPlaying().contains(player.getUniqueId())) {
-                System.out.println(-2);
                 event.setCancelled(true);
             } else {
-                System.out.println(0);
+                SwordplayGame swordplayGame = null;
+                Player swordplayWinner = null;
+
                 if (event instanceof EntityDamageByEntityEvent) {
                     EntityDamageByEntityEvent damageByEntityEvent = (EntityDamageByEntityEvent) event;
                     if (damageByEntityEvent.getDamager() instanceof Player) {
-                        event.setCancelled(true);
-                        return;
+                        Player damager = (Player) damageByEntityEvent.getDamager();
+                        Map<UUID, Game> games = Main.getGameManager().getGames();
+                        if (games.containsKey(player.getUniqueId()) == games.containsKey(damager.getUniqueId()) &&
+                                games.get(player.getUniqueId()) instanceof SwordplayGame) {
+                            swordplayGame = (SwordplayGame) games.get(player.getUniqueId());
+                            swordplayWinner = damager;
+                        } else {
+                            event.setCancelled(true);
+                        }
                     }
                 }
+
                 if (player.getHealth() - event.getDamage() <= 0) {
                     event.setCancelled(true);
-                    System.out.println(1);
-                    Main.getGameManager().removePlayerFromGame(player);
-                    System.out.println(100);
-                    Main.getGameManager().joinLobby(player);
-                    System.out.println(10000);
+                    if (swordplayGame != null) {
+                        swordplayGame.endGameWithWinner(swordplayWinner, player);
+                    } else {
+                        Main.getGameManager().removePlayerFromGame(player);
+                        Main.getGameManager().joinLobby(player);
+                    }
                 }
             }
-        } else {
+        } else if (event.getEntity() instanceof Villager) {
             event.setCancelled(true);
         }
     }

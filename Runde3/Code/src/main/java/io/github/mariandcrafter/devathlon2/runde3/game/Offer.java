@@ -1,6 +1,7 @@
 package io.github.mariandcrafter.devathlon2.runde3.game;
 
 import io.github.mariandcrafter.devathlon2.runde3.Main;
+import io.github.mariandcrafter.devathlon2.runde3.game.archery.Archery;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -21,6 +22,8 @@ public class Offer {
         Healer healer = new Healer();
         OFFERS.add(new Offer(VillagerType.HEALER_EXPENSIVE, 1, 5, healer));
         OFFERS.add(new Offer(VillagerType.HEALER_CHEAP, 1, 3, healer));
+
+        OFFERS.add(new Offer(VillagerType.WITCHHUNT, 1, 3, Main.getConfiguration().getWitchhunt()));
     }
 
     public static List<Offer> offersForVillagerType(VillagerType villagerType) {
@@ -71,22 +74,34 @@ public class Offer {
             return;
         }
 
-        if (!playerHasBread(player, costs)) {
-            player.sendMessage("§cDu hast nicht genug Brot dafür.");
+        if (!playerHasBread(player, costs))
             return;
-        }
-        player.getInventory().removeItem(new ItemStack(Material.BREAD, costs));
 
+        player.getInventory().removeItem(new ItemStack(Material.BREAD, costs));
         buyable.bought(this, player);
     }
 
-    private boolean playerHasBread(Player player, int amount) {
+    public boolean acceptTwoPlayerOffer(Player player1, Player player2) {
+        System.out.println(player1 + " " + player2);
+        if (!playerHasBread(player1, costs) || !playerHasBread(player2, costs))
+            return false;
+        player1.getInventory().removeItem(new ItemStack(Material.BREAD, costs));
+        player2.getInventory().removeItem(new ItemStack(Material.BREAD, costs));
+
+        return true;
+    }
+
+    public boolean playerHasBread(Player player, int amount) {
         int playerAmount = 0;
         for (ItemStack itemStack : player.getInventory().getContents()) {
             if (itemStack != null && itemStack.getType() == Material.BREAD)
                 playerAmount += itemStack.getAmount();
         }
-        return playerAmount >= amount;
+        if (playerAmount < amount) {
+            player.sendMessage("§cDu hast nicht genug Brot dafür.");
+            return false;
+        }
+        return true;
     }
 
     @Override

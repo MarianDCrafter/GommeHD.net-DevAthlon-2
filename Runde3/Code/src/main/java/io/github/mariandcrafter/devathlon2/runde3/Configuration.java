@@ -1,8 +1,10 @@
 package io.github.mariandcrafter.devathlon2.runde3;
 
-import io.github.mariandcrafter.devathlon2.runde3.game.Archery;
 import io.github.mariandcrafter.devathlon2.runde3.game.Area;
 import io.github.mariandcrafter.devathlon2.runde3.game.VillagerType;
+import io.github.mariandcrafter.devathlon2.runde3.game.archery.Archery;
+import io.github.mariandcrafter.devathlon2.runde3.game.swordplay.Swordplay;
+import io.github.mariandcrafter.devathlon2.runde3.game.witchhunt.Witchhunt;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,6 +24,8 @@ public class Configuration {
     private List<Location> silverfishSpawns;
     private Map<Location, VillagerType> villagerSpawns;
     private Archery archery;
+    private Swordplay swordplay;
+    private Witchhunt witchhunt;
 
     /**
      * @param configuration the configuration file of the plugin
@@ -43,6 +47,8 @@ public class Configuration {
         silverfishSpawns = loadSilverfishSpawns(world, "silverfishSpawns");
         villagerSpawns = loadVillagerSpawns(world, "villagerSpawns");
         archery = loadArchery(world, "gamemodes.archery");
+        swordplay = loadSwordplay(world, "gamemodes.swordplay");
+        witchhunt = loadWitchhunt(world, "gamemodes.witchHunt");
     }
 
     private List<Location> loadSilverfishSpawns(World world, String path) {
@@ -56,6 +62,7 @@ public class Configuration {
     private Map<Location, VillagerType> loadVillagerSpawns(World world, String path) {
         Map<Location, VillagerType> villagerSpawns = new HashMap<Location, VillagerType>();
         villagerSpawns.put(loadLocationWithYawAndPitch(world, path + ".archery"), VillagerType.ARCHERY);
+        villagerSpawns.put(loadLocationWithYawAndPitch(world, path + ".witchhunt"), VillagerType.WITCHHUNT);
         for (String villagerSpawnPath : configuration.getConfigurationSection(path + ".healersCheap").getKeys(false)) {
             villagerSpawns.put(loadLocation(world, path + ".healersCheap." + villagerSpawnPath), VillagerType.HEALER_CHEAP);
         }
@@ -72,6 +79,31 @@ public class Configuration {
             hayBlocks.add(loadBlockLocation(world, path + ".hayBlocks." + hayBlockPath));
         }
         return new Archery(area, hayBlocks);
+    }
+
+    private Swordplay loadSwordplay(World world, String path) {
+        Location plate1 = loadBlockLocation(world, path + ".plate1");
+        Location plate2 = loadBlockLocation(world, path + ".plate2");
+        Location spawn1 = loadLocation(world, path + ".spawn1");
+        Location spawn2 = loadLocation(world, path + ".spawn2");
+        Location spawnAfter = loadLocation(world, path + ".spawnAfter");
+        return new Swordplay(plate1, plate2, spawn1, spawn2, spawnAfter);
+    }
+
+    private Witchhunt loadWitchhunt(World world, String path) {
+        Location spawn = loadLocation(world, path + ".spawn");
+        Location spawnAfter = loadLocation(world, path + ".spawnAfter");
+        Location witchSpawn = loadLocation(world, path + ".witchSpawn");
+        List<Location> skeletonSpawns = new ArrayList<Location>(), spiderSpawns = new ArrayList<Location>(), zombieSpawns = new ArrayList<Location>();
+
+        for (String skeletonSpawnPath : configuration.getConfigurationSection(path + ".skeletonSpawns").getKeys(false))
+            skeletonSpawns.add(loadLocation(world, path + ".skeletonSpawns." + skeletonSpawnPath));
+        for (String spiderSpawnPath : configuration.getConfigurationSection(path + ".spiderSpawns").getKeys(false))
+            spiderSpawns.add(loadLocation(world, path + ".spiderSpawns." + spiderSpawnPath));
+        for (String zombieSpawnPath : configuration.getConfigurationSection(path + ".zombieSpawns").getKeys(false))
+            skeletonSpawns.add(loadLocation(world, path + ".zombieSpawns." + zombieSpawnPath));
+
+        return new Witchhunt(spawn, spawnAfter, witchSpawn, skeletonSpawns, spiderSpawns, zombieSpawns);
     }
 
     /**
@@ -172,6 +204,14 @@ public class Configuration {
 
     public Archery getArchery() {
         return archery;
+    }
+
+    public Swordplay getSwordplay() {
+        return swordplay;
+    }
+
+    public Witchhunt getWitchhunt() {
+        return witchhunt;
     }
 
 }

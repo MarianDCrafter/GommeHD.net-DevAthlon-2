@@ -3,12 +3,16 @@ package io.github.mariandcrafter.devathlon2.runde3.game;
 import io.github.mariandcrafter.bukkitpluginapi.messages.Message;
 import io.github.mariandcrafter.bukkitpluginapi.utils.BukkitUtils;
 import io.github.mariandcrafter.devathlon2.runde3.Main;
+import io.github.mariandcrafter.devathlon2.runde3.util.PlayerUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Villager;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -31,6 +35,7 @@ public class GameManager implements Runnable {
     private Map<UUID, Game> games = new HashMap<UUID, Game>();
 
     private Map<UUID, Villager> lastOfferVillagers = new HashMap<UUID, Villager>();
+    private List<Silverfish> silverfishes = new ArrayList<Silverfish>();
 
     public GameManager() {
         phase = Phase.LOBBY;
@@ -41,11 +46,11 @@ public class GameManager implements Runnable {
 
     private void spawnVillagers() {
         for (Map.Entry<Location, VillagerType> entry : Main.getConfiguration().getVillagerSpawns().entrySet()) {
-            System.out.println(entry.getKey());
             Villager villager = (Villager) entry.getKey().getWorld().spawnEntity(entry.getKey(), EntityType.VILLAGER);
             villager.setProfession(entry.getValue().getProfession());
+            villager.setCustomName(entry.getValue().getName());
+            villager.setCustomNameVisible(true);
             villagers.put(villager, entry.getValue());
-            System.out.println(villager.getLocation());
         }
     }
 
@@ -70,15 +75,20 @@ public class GameManager implements Runnable {
                 }
             }
         } else {
+            Iterator<Silverfish> iterator = silverfishes.iterator();
+            while (iterator.hasNext()) {
+                Silverfish silverfish = iterator.next();
+                if (!silverfish.isValid()) iterator.remove();
+                silverfish.getLocation().getWorld().playEffect(silverfish.getLocation(), Effect.FLAME, 5);
+            }
+
             int silverfishCount = silverfishCount();
             for (int i = 0; i < silverfishCount; i++) {
                 Silverfish silverfish = (Silverfish) Bukkit.getWorld("world").spawnEntity(randomSilverfishLocation(), EntityType.SILVERFISH);
                 silverfish.setTarget(randomPlayingPlayer());
-                System.out.println(silverfish);
-                System.out.println(silverfish.getLocation());
-                System.out.println(silverfish.getTarget());
+                silverfishes.add(silverfish);
             }
-            silverfishesPerSecond += 0.001;
+            silverfishesPerSecond += 0.015;
         }
     }
 
@@ -95,45 +105,51 @@ public class GameManager implements Runnable {
 
     public void joinLobby(Player player) {
         player.teleport(Main.getConfiguration().getLobbySpawn());
-        // TODO PlayerUtils.clear(player);
+        PlayerUtils.clear(player);
     }
 
     public void joinGame(Player player) {
         playing.add(player.getUniqueId());
         player.teleport(Main.getConfiguration().getMapSpawn());
+        player.getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
+        player.getInventory().addItem(new ItemStack(Material.BREAD, 3));
+        player.getInventory().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+        player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+        player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
     }
 
     public void removePlayerFromGame(Player player) {
-        System.out.println(2);
         if (playing.contains(player.getUniqueId())) {
-            System.out.println(3);
             playing.remove(player.getUniqueId());
             lastOfferVillagers.remove(player.getUniqueId());
+            if (games.containsKey(player.getUniqueId()))
+                games.get(player.getUniqueId()).stop();
             Bukkit.broadcastMessage("§6" + player.getName() + " §4ist gestorben!");
-            System.out.println(4);
         }
 
-        System.out.println(5);
         if (phase == Phase.INGAME && playing.size() == 1) {
-            System.out.println(6);
             Bukkit.broadcastMessage("§9Das Spiel ist beendet.");
             Bukkit.broadcastMessage("§9Gewonnen hat §l" + Bukkit.getPlayer(playing.get(0)).getName() + "§9.");
             phase = Phase.LOBBY;
+            time = LOBBY_TIME;
 
-            System.out.println(7);
-            for (UUID uuid : playing) {
-                joinLobby(Bukkit.getPlayer(uuid));
-            }
-            playing.clear();
-            lastOfferVillagers.clear();
-
-            System.out.println(8);
             Iterator<Game> iterator = games.values().iterator();
             while (iterator.hasNext()) {
                 Game game = iterator.next();
                 iterator.remove();
                 game.stop();
             }
+
+            for (UUID uuid : playing) {
+                joinLobby(Bukkit.getPlayer(uuid));
+            }
+            playing.clear();
+            lastOfferVillagers.clear();
+            Main.getConfiguration().getArchery().resetCooldowns();
+            Main.getConfiguration().getWitchhunt().resetCooldowns();
+
+            for (Silverfish silverfish : silverfishes) silverfish.remove();
+            silverfishes.clear();
         }
     }
 

@@ -1,6 +1,9 @@
-package io.github.mariandcrafter.devathlon2.runde3.game;
+package io.github.mariandcrafter.devathlon2.runde3.game.archery;
 
 import io.github.mariandcrafter.devathlon2.runde3.Main;
+import io.github.mariandcrafter.devathlon2.runde3.game.Area;
+import io.github.mariandcrafter.devathlon2.runde3.game.Gamemode;
+import io.github.mariandcrafter.devathlon2.runde3.game.Offer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,11 +46,14 @@ public class Archery extends Gamemode<ArcheryGame> implements Listener {
 
     @Override
     public void bought(Offer offer, Player player) {
+        if (cooldownIsRunning(player, offer)) return;
+
         ArcheryGame game = new ArcheryGame((Gamemode) this, player, offer.getNumber());
         games.add(game);
         Main.getGameManager().getGames().put(player.getUniqueId(), game);
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Arrow)) return;
@@ -65,9 +71,9 @@ public class Archery extends Gamemode<ArcheryGame> implements Listener {
         }
 
         for (ArcheryGame game : games) {
-            if (game.getUuid() == player.getUniqueId()) {
+            if (game.getUuids().get(0) == player.getUniqueId()) {
                 if (block.getLocation().equals(currentBlock))
-                    game.hit();
+                    game.hit(block.getLocation());
                 else
                     game.fail();
                 chooseRandomBlock();

@@ -12,25 +12,53 @@ mapSpawn:
 
 silverfishSpawns:
   spawn1:
-    x: 13
+    x: 54
     y: 4
-    z: 42
+    z: 30
   spawn2:
-    x: 25
+    x: 82
     y: 4
-    z: 20
+    z: 25
   spawn3:
-    x: 44
+    x: 88
     y: 4
-    z: 38
+    z: 43
   spawn4:
-    x: 71
+    x: 76
     y: 4
-    z: 51
+    z: 53
   spawn5:
-    x: 97
+    x: 100
     y: 4
-    z: 82
+    z: 86
+  spawn7:
+    x: 33
+    y: 4
+    z: 74
+  spawn8:
+    x: 42
+    y: 4
+    z: 112
+  spawn9:
+    x: 27
+    y: 4
+    z: 58
+  spawn10:
+    x: 31
+    y: 4
+    z: 14
+  spawn11:
+    x: 53
+    y: 4
+    z: 4
+  spawn12:
+    x: 51
+    y: 4
+    z: 86
+  spawn13:
+    x: 83
+    y: 4
+    z: 75
 
 gamemodes:
   archery:
@@ -68,6 +96,87 @@ gamemodes:
         x: 106
         y: 6
         z: 102
+  swordplay:
+    plate1:
+      x: 17
+      y: 4
+      z: 55
+    plate2:
+      x: 4
+      y: 4
+      z: 55
+    spawn1:
+      x: 10.5
+      y: 4.0
+      z: 51.5
+    spawn2:
+      x: 10.5
+      y: 4.0
+      z: 13.5
+    spawnAfter:
+      x: 11.5
+      y: 4.0
+      z: 55.5
+  witchHunt:
+    spawn:
+      x: 102.5
+      y: 4.0
+      z: 23.5
+    spawnAfter:
+      x: 102.5
+      y: 4.0
+      z: 21.5
+    witchSpawn:
+      x: 107.5
+      y: 4.0
+      z: 37.5
+    skeletonSpawns:
+      skeleton1:
+        x: 103.5
+        y: 4.0
+        z: 26.5
+      skeleton2:
+        x: 101.5
+        y: 4.0
+        z: 27.5
+      skeleton3:
+        x: 104.5
+        y: 4.0
+        z: 29.5
+      skeleton4:
+        x: 101.5
+        y: 4.0
+        z: 31.5
+    spiderSpawns:
+      spider1:
+        x: 101.5
+        y: 4.0
+        z: 34.5
+      spider2:
+        x: 101.5
+        y: 4.0
+        z: 36.5
+    zombieSpawns:
+      zombie1:
+        x: 104.5
+        y: 4.0
+        z: 26.5
+      zombie2:
+        x: 100.5
+        y: 4.0
+        z: 27.5
+      zombie3:
+        x: 105.5
+        y: 4.0
+        z: 29.5
+      zombie4:
+        x: 100.5
+        y: 4.0
+        z: 31.5
+      zombie5:
+        x: 106.5
+        y: 4.0
+        z: 33.5
 
 villagerSpawns:
   healersExpensive:
@@ -75,42 +184,19 @@ villagerSpawns:
       x: 16.5
       y: 4.0
       z: 66.5
-      area:
-        start:
-          x: 9
-          y: 7
-          z: 68
-        end:
-          x: 23
-          y: 3
-          z: 61
     healer2:
       x: 83.5
       y: 4.0
       z: 66.5
-      area:
-        start:
-          x: 84
-          y: 8
-          z: 66
-        end:
-          x: 77
-          y: 3
-          z: 62
   healersCheap:
     healer1:
       x: 99.5
       y: 4.0
       z: 7.5
-      area:
-        start:
-          x: 108
-          y: 9
-          z: 3
-        end:
-          x: 92
-          y: 3
-          z: 16
+  witchhunt:
+    x: 105.5
+    y: 4.0
+    z: 18.5
   archery:
     x: 76.5
     y: 4.0

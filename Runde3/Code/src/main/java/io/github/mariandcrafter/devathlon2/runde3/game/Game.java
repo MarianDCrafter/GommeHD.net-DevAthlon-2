@@ -3,24 +3,25 @@ package io.github.mariandcrafter.devathlon2.runde3.game;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Game {
 
-    protected UUID uuid;
+    protected List<UUID> uuids;
     protected Gamemode gamemode;
 
-    public Game(UUID uuid, Gamemode gamemode) {
-        this.uuid = uuid;
+    public Game(List<UUID> uuids, Gamemode gamemode) {
+        this.uuids = uuids;
         this.gamemode = gamemode;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public List<UUID> getUuids() {
+        return uuids;
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+        return Bukkit.getPlayer(uuids.get(0));
     }
 
     public Gamemode getGamemode() {

@@ -8,6 +8,7 @@ import io.github.mariandcrafter.devathlon2.runde3.game.GameManager;
 import io.github.mariandcrafter.devathlon2.runde3.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class Main extends Plugin {
     public void onEnable() {
         instance = this;
 
-        removeEntities();
+        setupWorld();
         loadConfig();
         loadGameManager();
         loadListeners();
@@ -42,8 +43,12 @@ public class Main extends Plugin {
         System.out.println("2. Devathlon, 3. Runde - GreenGlowPixel-Team - Plugin enabled!");
     }
 
-    private void removeEntities() {
+    private void setupWorld() {
         for (World world : Bukkit.getWorlds()) {
+            world.setDifficulty(Difficulty.HARD);
+            world.setGameRuleValue("doDaylightCycle", "false");
+            world.setGameRuleValue("mobGriefing", "false");
+            world.setTime(22500);
             for (Entity entity : world.getEntities()) {
                 if (!(entity instanceof Player)) {
                     entity.remove();
@@ -83,6 +88,9 @@ public class Main extends Plugin {
         Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockBreakListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DoorListener(), this);
+        Bukkit.getPluginManager().registerEvents(configuration.getWitchhunt(), this);
         Bukkit.getPluginManager().registerEvents(configuration.getArchery(), this);
     }
 
